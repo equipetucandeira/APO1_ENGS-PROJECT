@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.*;
-
+import java.time.LocalDate;
 public class Main {
 
 	public static void main(String[] args) {
@@ -13,13 +13,17 @@ public class Main {
 	
 		
 		ProjectTCC projeto = new ProjectTCC("Projeto");
+		
 		projeto.setTutored(student);
-		mentor.setAssociatedProjects(projeto);
-		
-		mentor.getProject("Projeto");
+		mentor.setAssociatedProjects(projeto);		
 		
 		
+		System.out.println(mentor.getProject("Projeto"));
+		LocalDate startDate = LocalDate.now();
+		LocalDate endDate = LocalDate.now();
+		Task tarefa = new Task(startDate, endDate, "tarefa1", "tarefa-faca", StatusTypes.PROGRESS, 3);
 		
+		projeto.addTasks(tarefa);
 		
 	}
 

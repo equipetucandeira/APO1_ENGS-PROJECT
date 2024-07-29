@@ -9,12 +9,13 @@ public class Task {
     private LocalDate endDate;
     private String title;
     private String description;
-    private String status;
+    private StatusTypes status;
     private List<Task> subTasks;
     private int duration;
     private float grade;
 
-    public Task(LocalDate startDate, LocalDate endDate, String title, String description, String status, int duration) {
+    
+    public Task(LocalDate startDate, LocalDate endDate, String title, String description, StatusTypes status, int duration) {
         this.setStartDate(startDate); 
         this.setEndDate(endDate);
         this.setDescription(description);
@@ -22,8 +23,7 @@ public class Task {
         this.setStatus(status);
         
     }
-  
-    
+ 
     public Task(Task task) {
     	 this.setStartDate(task.startDate); 
          this.setEndDate(task.endDate);
@@ -78,11 +78,11 @@ public class Task {
         this.description = description;
     }
 
-    private String getStatus() {
+    private StatusTypes getStatus() {
         return status;
     }
 
-    private void setStatus(String status) {
+    private void setStatus(StatusTypes status) {
         this.status = status;
     }
 

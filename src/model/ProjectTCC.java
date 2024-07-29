@@ -10,6 +10,9 @@ public class ProjectTCC {
     private float grade;
     private List<Task> tasks;
 
+    public ProjectTCC() {
+    	
+    }
     public ProjectTCC(String name, StatusTypes status, float grade) {
         this.name = name;
         this.status = status;
@@ -38,11 +41,11 @@ public class ProjectTCC {
         this.status = status;
     }
     
-    public void setTasks(Task task) {
+    public void addTasks(Task task) {
         this.tasks.add(task);
     }
     
-    public void setSubTask(Task task,Task subTask) {
+    public void addSubTask(Task task,Task subTask) {
     	if(this.getTaskFromList(task).getSubTasks().equals(null)) {
     		
     		this.getTaskFromList(task).setSubTasks(subTask);	
