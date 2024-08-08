@@ -8,6 +8,7 @@ public class User {
 	protected Integer userID;
 	protected String password;
 	protected List<Chat> chats;
+	private List<Notification> notifications;
 	
 	public User(String name, String email, Integer userID, String password) {
 		this.setName(name);
@@ -15,6 +16,17 @@ public class User {
 		this.setUserID(userID);
 		this.setPassword(password);
 		this.chats = new ArrayList<>();
+		this.notifications = new ArrayList<Notification>();
+	}
+	
+	public void sendNotification(Notification notification) {
+		notifications.add(notification);	
+	}
+	
+	public void getNotifications() {
+		for( Notification notification: this.notifications){
+			System.out.println(notification.message);
+		}
 	}
 	
 	protected void Login() {

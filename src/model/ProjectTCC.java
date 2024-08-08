@@ -1,95 +1,137 @@
 package model;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectTCC {
 	
-	private String name;
-	private List<Tutored> tutoreds;
+	private String title;
+	private Advisor advisor;
+	private List<Student> students;
     private StatusTypes status;
     private float grade;
     private List<Task> tasks;
-
-    public ProjectTCC() {
+    
+    public ProjectTCC(String title,Advisor advisor, Student student) {
+    	this.setTitle(title);
+    	this.setAdvisor(advisor);	
+    	this.setStatus(StatusTypes.PROGRESS);
+    	this.setGrade(grade);
+    	this.tasks = new ArrayList<Task>();
     	
     }
-    public ProjectTCC(String name, StatusTypes status, float grade) {
-        this.name = name;
-        this.status = status;
-        this.grade = grade;
-        this.tasks = new ArrayList<Task>();
-    }
     
-    public ProjectTCC(String name) {
-        this.name = name;
-        this.tutoreds = new ArrayList<Tutored>();
-        this.status = StatusTypes.PROGRESS;
-        this.tasks = new ArrayList<Task>();   
+    public void setTitle(String title) {
+    	this.title = title;
     }
-        
-    
-    public void setTutored(Tutored tutored) {
-    	this.tutoreds.add(tutored);
+    public void setAdvisor(Advisor advisor) {
+    	this.advisor = advisor;
     }
-    
-
-    public void setName(String name) {
-        this.name = name;
+    public void setStudent(Student student) {
+    	this.students.add(student);
     }
-    
     public void setStatus(StatusTypes status) {
-        this.status = status;
-    }
-    
-    public void addTasks(Task task) {
-        this.tasks.add(task);
-    }
-    
-    public void addSubTask(Task task,Task subTask) {
-    	if(this.getTaskFromList(task).getSubTasks().equals(null)) {
-    		
-    		this.getTaskFromList(task).setSubTasks(subTask);	
-    	}
-    }
-    
-    public Tutored getTutoredByName(String tutoredName) {
-    	for(Tutored tutored : tutoreds) {
-    		if(tutored.getName().equals(tutoredName)) { 
-    			return tutored;
-    		}
-    	}
-		return null;
-    }
-    
-    public List<Tutored> getAllTutoreds() {
-    	return tutoreds;
+    	this.status = status;
     }
     public void setGrade(float grade) {
-        this.grade = grade;
-    }
-
-    public StatusTypes getStatus() {
-        return status;
+    	this.grade = grade;
     }
     
-    public float getGrade() {
-        return grade;
-    }
     
-    public String getName() {
-        return name;
-    }
-
-    public List<Task> getAllTasksFromList() {
-        return tasks;
-    }
-    
-    public Task getTaskFromList(Task task) {
-    	return tasks.get(tasks.indexOf(task));
-    }
-    
-    public void checkTask(Task task) {
+    public Task createTask(LocalDate startDate, LocalDate endDate, String title, String description){
+    	Task newtask = new Task(startDate,endDate,title,description);
+    	tasks.add(newtask);
     	
+    	return newtask;
+   }
+    
+    public Task createSubTask(Task task,LocalDate startDate, LocalDate endDate, String title, String description){
+    	try {
+    	Task subtask = task.setSubTask(startDate, endDate, title, description);
+    	return subtask;
+    	}catch(Exception e) {
+    		System.out.println(e.getMessage());
+    		return null;
+    	}
+   }
+   
+    
+    public void attachDocument(String taskname, Document document) throws Exception {
+    	Task searchTask = this.getTaskByName(taskname);
+    	Task subTask = searchTask.getSubTaskByName(taskname);
+    	Task useSearch;
+    	
+    	if(subTask != null) {
+    		useSearch = subTask;
+    	}else {
+    		useSearch = searchTask;
+    	}
+    	
+    	if(useSearch.getStatus() != StatusTypes.COMPLETED) {
+	    	if(useSearch.haveSubtasks()) {
+	    		throw new Exception("Erro, você não pode adicionar um documento dentro de uma tarefa pai");
+	    	}else {
+	    		useSearch.attachDocument(document);
+	    		 Notification notification = new TaskCompletedNotification(
+	                     "Documento '" + document.getTitle() + "' foi anexado à tarefa '" + useSearch.getTitle() + "'.",
+	                     StatusTypes.SEND
+	                 );
+	    		 this.sendNotification(this.advisor,notification);
+	    		searchTask.verifySubTaskStatus();
+	    	}
+	    }
+    }
+    
+   public Advisor getAdvisor() {
+	   return this.advisor;
+   }
+ 
+    public String getProjectTitle() {
+    	return title;
+    }
+    public String getAdvisorName() {
+    	return this.advisor.toString();
+    }
+    public List<Student> getStudentsList() {
+    	return this.students;
+    }
+    
+    public Student getStudentByName(String name) {
+    	for(Student search : this.students) {
+    		if(search.getName().equalsIgnoreCase(name)){
+    			return search;
+    		}
+    	}
+    	return null;
+    }
+    public String getProjectStatus() {
+    	return this.status.toString();
+    }
+    
+    public List<Task> getTaskList(){
+    	return tasks;
+    }
+    
+    
+    public Task getTaskByName(String name) {
+    	for(Task search : this.tasks) {
+    		if(search.getTitle().equalsIgnoreCase(name)){
+    			return search;
+    		}
+    		if(search.haveSubtasks()) {
+	    		for(Task subSearch : search.getSubTasks()) {
+	    			if(subSearch.getTitle().equalsIgnoreCase(name)) {
+	    				return search;
+	    			}
+	    		}
+    		}
+    	}
+    	return null;
+    }
+   
+    
+    public void sendNotification(User user,Notification notification) {
+    	user.sendNotification(notification);
     }
  
 }

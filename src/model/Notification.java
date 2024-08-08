@@ -1,48 +1,29 @@
 package model;
 
-public class Notification {
-	
-private int notificationID;
-private StatusTypes type;
-private String message;
-private Boolean status;
+public abstract class Notification {
 
-public Notification(int notificationID,String message, Boolean status) {
-	this.notificationID = notificationID;
+protected String message;
+protected StatusTypes status;
+
+public Notification(String message, StatusTypes status) {
 	this.message = message;
-	this.status = status;
-	this.type = StatusTypes.UNDEFINED;
+	this.status = StatusTypes.UNDEFINED;
 }
 
 public String getMessage() {
 	return message;
 }
 
-public int getNotificationID() {
-	return notificationID;
-}
-
-public void setNotificationID(int notificationID) {
-	this.notificationID = notificationID;
-}
-
-public StatusTypes getType() {
-	return type;
-}
-
-public void setType(StatusTypes type) {
-	this.type = type;
-}
 
 public void setMessage(String message) {
 	this.message = message;
 }
 
-public Boolean getStatus() {
+public StatusTypes getStatus() {
 	return status;
 }
 
-public void setStatus(Boolean status) {
+public void setStatus(StatusTypes status) {
 	this.status = status;
 }
 

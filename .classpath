@@ -21,6 +21,6 @@
 	<classpathentry kind="lib" path="/Users/pedroclemonini/.p2/pool/plugins/org.eclipse.ui.forms_3.13.300.v20240424-0956.jar" sourcepath="/Users/pedroclemonini/.p2/pool/plugins/org.eclipse.ui.forms.source_3.13.300.v20240424-0956.jar"/>
 	<classpathentry kind="lib" path="/Users/pedroclemonini/.p2/pool/plugins/org.eclipse.ui.workbench_3.132.100.v20240612-0908.jar" sourcepath="/Users/pedroclemonini/.p2/pool/plugins/org.eclipse.ui.workbench.source_3.132.100.v20240612-0908.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
-	<classpathentry kind="lib" path="/Users/pedroclemonini/Desktop/arquivoAuxilio/mysql-connector-java-8.0.17.jar"/>
+	<classpathentry kind="lib" path="/Users/pedroclemonini/Downloads/arquivoAuxilio/mysql-connector-java-8.0.17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
