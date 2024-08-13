@@ -1,4 +1,5 @@
 package model;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -8,14 +9,14 @@ public class Message {
 	private String content;
 	private LocalDate date;
 	private LocalTime time;
-	
+
 	public Message(User author, String content, LocalDate date, LocalTime time) {
 		this.Author = author;
 		this.content = content;
 		this.date = date;
 		this.time = time;
 	}
-	
+
 	public Message() {
 		this.Author = null;
 		this.content = null;
@@ -62,10 +63,5 @@ public class Message {
 	public void setTime(LocalTime time) {
 		this.time = time;
 	}
-	
-	
-	
-
-
 
 }

@@ -1,15 +1,18 @@
 package model;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import model.notification.Notification;
+
 public class User {
-	protected String name;
-	protected String email;
-	protected Integer userID;
-	protected String password;
-	protected List<Chat> chats;
+	public String name;
+	public String email;
+	public Integer userID;
+	public String password;
+	public List<Chat> chats;
 	private List<Notification> notifications;
-	
+
 	public User(String name, String email, Integer userID, String password) {
 		this.setName(name);
 		this.setEmail(email);
@@ -18,83 +21,84 @@ public class User {
 		this.chats = new ArrayList<>();
 		this.notifications = new ArrayList<Notification>();
 	}
-	
-	public void sendNotification(Notification notification) {
-		notifications.add(notification);	
-	}
-	
-	public void getNotifications() {
-		for( Notification notification: this.notifications){
-			System.out.println(notification.message);
-		}
-	}
-	
-	protected void Login() {
-		//TODO
-	}
-	
-	protected void Logout(){
-		//TODO
+
+	public User() {
+		this.notifications = new ArrayList<Notification>();
 	}
 
-	protected String getName() {
+	public void sendNotification(Notification notification) {
+		notifications.add(notification);
+	}
+	
+
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+	
+
+	public User login() throws Exception {
+		return this;
+
+	}
+
+	public void Logout() {
+	}
+
+	public String getName() {
 		return name;
 	}
 
-	protected void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	protected String getEmail() {
+	public String getEmail() {
 		return this.email;
 	}
 
-	protected void setEmail(String email) {
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	protected Integer getUserID() {
+	public Integer getUserID() {
 		return this.userID;
 	}
 
-	protected void setUserID(int userID) {
+	public void setUserID(int userID) {
 		this.userID = userID;
 	}
 
-	protected void setPassword(String password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	protected List<Chat> getChats() {
+
+	public List<Chat> getChats() {
 		return chats;
 	}
-	
-	protected void removeChat(Chat chat) {
+
+	public void removeChat(Chat chat) {
 		chat.removeParticipant(this);
 		chats.remove(chat);
 	}
-	
-	
-	protected Chat setSingleChat(int id,String chatName,User destination) {
+
+	public Chat setSingleChat(int id, String chatName, User destination) {
 		List<User> participants = new ArrayList<User>();
-		
+
 		participants.add(this);
 		participants.add(destination);
-		Chat newChat = new Chat(id,chatName,participants);
+		Chat newChat = new Chat(id, chatName, participants);
 		chats.add(newChat);
 		return newChat;
 	}
 
-	protected void setGroupChat(int id,String chatName,List<User> UsersID) {
+	public void setGroupChat(int id, String chatName, List<User> UsersID) {
 		List<User> participants = new ArrayList<User>();
-		
+
 		participants.add(this);
 		participants.addAll(UsersID);
-		
-		chats.add(new GroupChat(id, chatName, participants));
-		
-	}
-	
-	
-}
 
+		chats.add(new GroupChat(id, chatName, participants));
+
+	}
+
+}

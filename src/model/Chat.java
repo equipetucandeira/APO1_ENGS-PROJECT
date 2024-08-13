@@ -1,22 +1,22 @@
 package model;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Chat{
+public class Chat {
 	private Integer chatID;
 	private String chatName;
 	private List<User> participants;
 	private List<Message> messages;
-	
-	
+
 	public Chat(Integer chatID, String chatName, List<User> participants) {
 		this.chatID = chatID;
 		this.chatName = chatName;
 		this.setParticipants(participants);
 		this.messages = new ArrayList<Message>();
 	}
-	
-	public Chat(Integer chatID,String chatName) {
+
+	public Chat(Integer chatID, String chatName) {
 		this.chatID = chatID;
 		this.chatName = chatName;
 		this.messages = new ArrayList<Message>();
@@ -41,7 +41,6 @@ public class Chat{
 	public List<Message> getMessages() {
 		return messages;
 	}
-	
 
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
@@ -50,24 +49,21 @@ public class Chat{
 	public List<User> getAllParticipants() {
 		return participants;
 	}
-	
+
 	public User getParticipant(User user) {
 		return participants.get(participants.indexOf(user));
 	}
-	
+
 	public void removeParticipant(User user) {
 		participants.remove(user);
 	}
 
 	public Boolean setParticipants(List<User> participants) {
-		if(participants.size() > 2) {
+		if (participants.size() > 2) {
 			return false;
 		}
 		this.participants = participants;
 		return true;
 	}
-	
-	
-	
-	
+
 }

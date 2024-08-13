@@ -1,4 +1,5 @@
 package model;
+
 import java.util.List;
 
 public class GroupChat extends Chat {
@@ -11,7 +12,7 @@ public class GroupChat extends Chat {
 		super(chatID, chatName);
 		this.setParticipants(participants);
 	}
-	
+
 	public int getChatID() {
 		return chatID;
 	}
@@ -35,7 +36,6 @@ public class GroupChat extends Chat {
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
 	}
-
 
 	public List<User> getParticipants() {
 		return participants;
