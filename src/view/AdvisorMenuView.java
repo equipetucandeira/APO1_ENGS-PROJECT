@@ -302,7 +302,11 @@ public class AdvisorMenuView {
 		}
 
 		for (Task task : projeto.getTasks()) {
-			task.loadSubTaskList();
+			try {
+				task.loadSubTaskList();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			TreeItem taskItem = new TreeItem(tree, SWT.NONE);
 			taskItem.setText(new String[] { task.getTitle(), task.getDuration().toString(),
 					task.getStartDate().toString(), task.getEndDate().toString(), task.getStatus().toString() });
@@ -336,7 +340,7 @@ public class AdvisorMenuView {
 		taskDescriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
 
 		// É uma subtarefa?
-		if (task.getSubTasks() != null) {
+		if (!task.isSubTask()) {
 			if (task.getStatus() != "COMPLETA") {
 				Label taskDurationLabel = new Label(newTaskShell, SWT.CENTER);
 				taskDurationLabel.setText("A tarefa está aberta a: " + task.getDuration().toString() + " dias");
@@ -484,7 +488,12 @@ public class AdvisorMenuView {
 			cal_start.set(Calendar.MILLISECOND, 0);
 			Date startDateObj = new Date(cal_start.getTimeInMillis());
 
-			task.createSubTask(startDateObj, endDateObj, nameText.getText(), descriptionText.getText());
+			try {
+				task.createSubTask(startDateObj, endDateObj, nameText.getText(), descriptionText.getText());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			populateTree(tree, project);
 			newTaskShell.close();
@@ -577,7 +586,7 @@ public class AdvisorMenuView {
 
 			sendResponseButton.addListener(SWT.Selection, sendResponseEvent -> {
 				if (Double.valueOf(numberText.getText()) < 10 || Double.valueOf(numberText.getText()) > 0) {
-					task.setFeedback(feedbackText.getText());
+					task.CreateFeedback(feedbackText.getText());
 					task.addTaskGrade(Double.valueOf(numberText.getText()));
 					for (Control control : tree.getChildren()) {
 						control.dispose();

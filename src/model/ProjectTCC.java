@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import banco.DBConnection;
+import banco.ProjectBanco;
 import banco.TaskBanco;
 import model.notification.Notification;
 
@@ -112,7 +113,7 @@ public class ProjectTCC implements InterfaceProject {
 
 	@Override
 	public void setTask(Integer id, LocalDate startDate, LocalDate endDate, String title, String description,
-		String status, Integer document_id, Double grade) {
+		String status, Integer document_id, Double grade) throws SQLException {
 		Task newtask = new Task(id, startDate, endDate, title, description, status,grade);
 		newtask.setDocument(document_id);
 		newtask.loadFeedback();
@@ -128,7 +129,7 @@ public class ProjectTCC implements InterfaceProject {
 	@Override
 	public void loadTaskList() throws SQLException {
 		this.tasks.clear();
-		TaskBanco.loadTaskList(this);
+		ProjectBanco.loadTaskList(this);
 	}
 
 }

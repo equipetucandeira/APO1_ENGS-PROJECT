@@ -38,7 +38,7 @@ public interface InterfaceProject {
 	void createTask(Date startDate, Date endDate, String title, String description) throws Exception;
 
 	void setTask(Integer id, LocalDate startDate, LocalDate endDate, String title, String description, String status,
-			Integer document_id, Double grade);
+			Integer document_id, Double grade) throws SQLException;
 
 	void sendNotification(User user, Notification notification);
 

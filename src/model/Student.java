@@ -52,10 +52,8 @@ public class Student extends User {
 	}
 
 	public Student getStudentById(Integer id) throws Exception {
+		return StudentBanco.getStudent(id);
 		
-		StudentBanco.loadStudent(id);
-		
-		return this;
 	}
 	
 	public void loadProject() throws SQLException {

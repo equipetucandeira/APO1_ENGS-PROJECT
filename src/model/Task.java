@@ -10,6 +10,7 @@ import java.time.Period;
 import java.util.List;
 
 import banco.DBConnection;
+import banco.TaskBanco;
 
 public class Task implements DocumentObserver {
 	private Integer id;
@@ -48,58 +49,17 @@ public class Task implements DocumentObserver {
 			this.attachedDocument = document;
 		}
 	}
-	public void taskCompleteUpdate() {
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "UPDATE task SET task_status = ? WHERE task_id = ?";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-			statement.setString(1, "COMPLETA");
-			statement.setInt(2, this.getID());
-
-			statement.executeUpdate();
-
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void taskCompleteUpdate() throws Exception {
+		TaskBanco.UpdateTaskStatusToComplete(this);
 	}
 
-	private void addDocumentIDFatherTask() {
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "UPDATE task SET document_id = ? WHERE task_id = ?";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-			statement.setInt(1, this.getDocument().getID());
-			statement.setInt(2, this.getID());
-
-			statement.executeUpdate();
-
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	private void addDocumentIDFatherTask() throws SQLException {
+		TaskBanco.updateDocumentToAttached(this);
 	}
 
 
-
-	public void subTaskCompleteUpdate() {
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "UPDATE subtask SET task_status = ?, document_id = ? WHERE subtask_id = ?";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-			statement.setString(1, "COMPLETA");
-			statement.setInt(2, this.getDocument().getID());
-			statement.setInt(3, this.getID());
-
-			statement.executeUpdate();
-
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void subTaskCompleteUpdate() throws SQLException {
+		TaskBanco.subTaskCompleteUpdate(this);
 	}
 
 	public void attachDocument(String filePath,String fileName) throws Exception {
@@ -107,7 +67,7 @@ public class Task implements DocumentObserver {
 			if (this.haveSubtasks()) {
 				throw new Exception("Erro, você não pode adicionar um documento dentro de uma tarefa pai");
 			} else {
-				
+
 				try {
 					Document document = new Document(filePath,fileName);
 					document.attachObserver(this);
@@ -117,21 +77,22 @@ public class Task implements DocumentObserver {
 					System.out.println("Erro ao inserir");
 					return;
 				} 
-					if(this.subTasks == null) {
-						subTaskCompleteUpdate();
-					}else {
-						taskCompleteUpdate();
-						addDocumentIDFatherTask();
-					}
-			
+				if(this.subTasks == null) {
+					subTaskCompleteUpdate();
+				}else {
+					taskCompleteUpdate();
+					addDocumentIDFatherTask();
+				}
+
 			}
 		}
 	}
 
-	public void verifySubTaskStatus() {
+
+	public void verifySubTaskStatus() throws Exception {
 		if (this.haveSubtasks()) {
-			for (Task task : subTasks) {
-				if (task.getStatus() == "INCOMPLETA") {
+			for (Task subtask : subTasks) {
+				if (subtask.getStatus().equalsIgnoreCase("INCOMPLETA")) {
 					this.status =  "INCOMPLETA";
 				} else {
 					this.status =  "COMPLETA";
@@ -153,7 +114,7 @@ public class Task implements DocumentObserver {
 		return this.grade;
 	}
 
-	public void setFeedback(String text) {
+	public void CreateFeedback(String text) {
 		if(text != null) {
 			if (this.feedback == null) {
 				if (this.getStatus() == "COMPLETA") {
@@ -164,64 +125,34 @@ public class Task implements DocumentObserver {
 		}
 	}
 
-	public void loadFeedback() {
+	public void setFeedback(Feedback feedback) {
+		this.feedback = feedback;
+	}
 
-		if(this.getSubTasks() != null) {	
-			try {
-				DBConnection connection = new DBConnection();
-				String sql = "SELECT * from feedback WHERE task_id = ?";
-				PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-				statement.setInt(1, this.getID());
-
-				ResultSet rs =  statement.executeQuery();
-				if(rs.next()){
-					this.feedback = new Feedback(rs.getDate("feedback_date").toLocalDate(),rs.getString("body"));
-				}
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();		
-			}
+	public Boolean isSubTask() {
+		if(this.getSubTasks() == null) {
+			return true;
+		}else {
+			return false;
 		}
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "SELECT * from sub_feedback WHERE subtask_id = ?";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
 
-			statement.setInt(1, this.getID());
+	}
 
-			ResultSet rs = statement.executeQuery();
-			if(rs.next()){
-				this.feedback = new Feedback(rs.getDate("feedback_date").toLocalDate(),rs.getString("body"));
-			}
+	public void loadFeedback() throws SQLException {
 
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(!isSubTask()) {	
+			TaskBanco.loadTaskFeedback(this);
 		}
+		TaskBanco.loadSubTaskFeedback(this);
+
 	}
 
 	public Feedback getFeedback() {
 		return this.feedback;
 	}
 
-	public void createSubTask(Date startDate, Date endDate, String title, String description) {
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "INSERT INTO subtask(task_id,initial_date, final_date, title, task_description) values (?,?,?,?,?) ";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-			statement.setInt(1, this.getID());
-			statement.setDate(2, startDate);
-			statement.setDate(3, endDate);
-			statement.setString(4, title);
-			statement.setString(5, description);
-
-			statement.executeUpdate();
-			statement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void createSubTask(Date startDate, Date endDate, String title, String description) throws SQLException {
+		TaskBanco.createSubTask(startDate, endDate, title, description, this);
 	}
 
 	public Task setSubTask(Integer id, LocalDate startDate, LocalDate endDate, String title, String description,
@@ -334,30 +265,11 @@ public class Task implements DocumentObserver {
 		return null;
 	}
 
-	public void loadSubTaskList() {
+	public void loadSubTaskList() throws SQLException, Exception {	
 		this.subTasks.clear();
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "SELECT * from subtask WHERE task_id =(?)";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-			statement.setInt(1, this.getID());
-
-			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				this.setSubTask(rs.getInt("subtask_id"), rs.getDate("initial_date").toLocalDate(),
-						rs.getDate("final_date").toLocalDate(), rs.getString("title"), rs.getString("task_description"),
-						rs.getString("task_status"), rs.getInt("document_id"), rs.getDouble("task_grade"));
-			}
-			checkTaskDate();
-			verifySubTaskStatus();
-			rs.close();
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		TaskBanco.loadSubTaskList(this);
+		checkTaskDate();
+		verifySubTaskStatus();
 	}
 
 	private void checkTaskDate() {
@@ -371,23 +283,9 @@ public class Task implements DocumentObserver {
 				maxDate = subtask.getEndDate();
 			}
 		}
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "UPDATE task SET initial_date = ?, final_date = ? WHERE task_id = ?";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-			statement.setDate(1, java.sql.Date.valueOf(minDate));
-			statement.setDate(2, java.sql.Date.valueOf(maxDate));
-			statement.setInt(3, this.getID());
-
-			statement.executeUpdate();
-
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.setStartDate(minDate);
+		this.setEndDate(maxDate);
+		TaskBanco.UpdateTaskDate(this);
 	}
 
 	public void addTaskGrade(Double grade) {

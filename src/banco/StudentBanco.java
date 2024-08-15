@@ -82,7 +82,7 @@ public class StudentBanco {
 	
 	}
 	
-	public static Student loadStudent(Integer id) throws Exception {
+	public static Student getStudent(Integer id) throws Exception {
 		DBConnection connection = new DBConnection();
 
 		String sql = "select * from user_guiding where guiding_id =?";

@@ -201,7 +201,12 @@ public class StudentMenuView {
 		}
 
 		for (Task task : projeto.getTasks()) {
-			task.loadSubTaskList();
+			try {
+				task.loadSubTaskList();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			TreeItem taskItem = new TreeItem(tree, SWT.NONE);
 			taskItem.setText(new String[] { task.getTitle(), task.getDuration().toString(),
 					task.getStartDate().toString(), task.getEndDate().toString(), task.getStatus().toString() });
@@ -266,8 +271,8 @@ public class StudentMenuView {
 			taskFeedbackLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
 		}
 
-
-		if(task.getSubTasks() != null) {
+		System.out.println(task.haveSubtasks());
+		if(!task.isSubTask()) {
 			if(task.haveSubtasks()) {
 			}else {
 				addDocumentShell(newTaskShell,task,tree,project);
@@ -282,7 +287,7 @@ public class StudentMenuView {
 
 
 	public void addDocumentShell(Shell documentShell,Task task,Tree tree, InterfaceProject project) {
-		if(task.getStatus() == "INCOMPLETA") {
+		if(task.getStatus().equalsIgnoreCase("INCOMPLETA")) {
 		Button FeedbackButton = new Button(documentShell, SWT.PUSH);
 		FeedbackButton.setText("Adicionar Entrega");
 		GridData FeedbackGridData = new GridData(SWT.LEFT, SWT.LEFT, false, false);

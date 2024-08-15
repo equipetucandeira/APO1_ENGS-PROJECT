@@ -19,7 +19,7 @@ public class Feedback {
 	}
 
 	public void addToDatabase(Task task) {
-		if(task.getSubTasks() != null) {	
+		if(!task.isSubTask()) {	
 			try {
 				DBConnection connection = new DBConnection();
 				String sql = "call addFeedback(?,?,?)";

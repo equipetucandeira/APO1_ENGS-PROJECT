@@ -43,8 +43,7 @@ public class Advisor extends User  {
 	public void setAssociatedProjects(Integer id, String title, int student_id, String status, float grade) {
 		try {
 			Student student = new Student();
-			student.setUserID(student_id);
-			student.getStudentById(student_id);
+			student = student.getStudentById(student_id);
 			ProjectTCC projeto = new ProjectTCC(id, title, this, student, status, grade);
 			associatedProjects.add(projeto);
 		} catch (Exception e) {
