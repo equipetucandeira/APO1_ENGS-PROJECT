@@ -5,7 +5,7 @@ import java.util.List;
 
 import model.notification.Notification;
 
-public class User implements InterfaceUser {
+public abstract class User implements InterfaceUser {
 	public String name;
 	public String email;
 	public Integer userID;
