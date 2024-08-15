@@ -37,9 +37,8 @@ public class User implements UserInterfaces {
 	}
 	
 
-	public UserInterfaces login() throws Exception {
+	public User login() throws Exception {
 		return this;
-
 	}
 
 	public void Logout() {

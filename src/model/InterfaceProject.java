@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,13 +35,13 @@ public interface InterfaceProject {
 
 	List<Task> getTasks();
 
-	void createTask(Date startDate, Date endDate, String title, String description);
+	void createTask(Date startDate, Date endDate, String title, String description) throws Exception;
 
 	void setTask(Integer id, LocalDate startDate, LocalDate endDate, String title, String description, String status,
 			Integer document_id, Double grade);
 
 	void sendNotification(User user, Notification notification);
 
-	void loadTaskList();
+	void loadTaskList() throws SQLException;
 
 }

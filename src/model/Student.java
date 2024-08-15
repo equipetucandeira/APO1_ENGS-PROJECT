@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import banco.DBConnection;
+import banco.StudentBanco;
 import model.notification.AdvisorNotification;
 import model.notification.Notification;
 import model.notification.StudentNotification;
@@ -19,133 +20,48 @@ public class Student extends User {
 	public Student() {
 	}
 	
+
+	public Student login() throws Exception {
+		StudentBanco.login(this);
+		return this;
+	}
 	
+	public InterfaceProject getProject() {
+		return this.project;
+	}
 	
-	private void setProject(Integer projectID, String title, Integer advisorID, String status, float grade) {
+	public void setProject(Integer projectID, String title, Integer advisorID, String status, float grade) {
 		try {
 		Advisor advisor = new Advisor();
 		advisor = advisor.loadAdvisor(advisorID);
 		InterfaceProject newProject = new ProjectTCC(projectID,title,advisor,this,status,grade);
 		this.project = newProject;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-	@Override
-	public UserInterfaces login() throws Exception {
-
-		DBConnection connection = new DBConnection();
-
-		String sql = "select * from user_guiding where email =?";
-		PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-		statement.setString(1, email);
-		ResultSet rs = statement.executeQuery();
-
-		if (rs.next()) {
-			String searchEmail = rs.getString("email");
-			if (searchEmail != null) {
-				String searchPassword = rs.getString("user_password");
-				if (searchPassword.equals(password)) {
-					this.setUserID(Integer.valueOf(rs.getInt("guiding_id")));
-					this.setName(rs.getString("username") + " " + rs.getString("lastname"));
-					return this;
-				}
-
-			}
-		} else {
-			throw new Exception("Estudante não encontrado");
-
-		}
-
-		rs.close();
-		statement.close();
-		connection.getConnection().close();
-		return null;
-
-	}
-	public InterfaceProject getProject() {
-		return this.project;
+	
+	public void loadNotification() throws Exception {
+		StudentBanco.loadNotifications(this);
 	}
 	
-	public void loadNotification() {
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "Select * from GuidingNotifications where guiding_id = ?";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-			statement.setInt(1, this.getUserID());
-
-			ResultSet rs = statement.executeQuery();
-			while(rs.next()) {
-				setNotification(rs.getString("body"),rs.getString("notification_status"));
-			}
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();		
-		}
-	}
+	public void setNotification(String body,String status) {
 	
-	private void setNotification(String body,String status) {
-		StatusTypes type = StatusTypes.UNDEFINED;
-		switch (status) {
-		case "READ":
-			type = StatusTypes.READ;
-			break;
-		case "NOT_READ":
-			type = StatusTypes.RECEIVED;
-			break;
-		}
-		Notification notification = new StudentNotification(body,type,this);
+		Notification notification = new StudentNotification(body,status,this);
 		this.sendNotification(notification);
 	}
 
-	public Student getStudentById(int id) throws Exception {
-		DBConnection connection = new DBConnection();
-
-		String sql = "select * from user_guiding where guiding_id =?";
-		PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-		statement.setInt(1, id);
-		ResultSet rs = statement.executeQuery();
-
-		if (rs.next()) {
-			this.setEmail(rs.getString("email"));
-			this.setName(rs.getString("username") + " " + rs.getString("lastname"));
-			this.setUserID(Integer.valueOf(rs.getInt("guiding_id")));
-			return this;
-		} else {
-			throw new Exception("Usuário não encontrado");
-		}
+	public Student getStudentById(Integer id) throws Exception {
+		
+		StudentBanco.loadStudent(id);
+		
+		return this;
 	}
 	
-	public void loadProject() {
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "call getGuidingProjects(?)";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-			statement.setInt(1, this.getUserID());
-
-			ResultSet rs = statement.executeQuery();
-			if(rs.next()) {
-			this.setProject(
-					rs.getInt("project_id"), 
-					rs.getString("project_name"),
-					rs.getInt("advisor_id"), 
-					rs.getString("project_status"), 
-					rs.getFloat("project_grade")
-					);
-			}	
-			
-			rs.close();
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void loadProject() throws SQLException {
+		StudentBanco.loadProject(this);
 	}
 
-	
 
-	
 
 }

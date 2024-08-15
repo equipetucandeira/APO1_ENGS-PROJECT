@@ -3,6 +3,7 @@ package view;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
@@ -231,7 +232,7 @@ public class AdvisorMenuView {
 		createProject.addListener(SWT.Selection, e -> {
 			try {
 				Student student = new Student();
-				student = student.getStudentById(Integer.valueOf(studentIdText.getText()));
+				student.getStudentById(Integer.valueOf(studentIdText.getText()));
 				advisor.createProject(projectNameText.getText(), student);
 				projectsShell.close();
 				updateProjectsList(advisor);
@@ -293,7 +294,12 @@ public class AdvisorMenuView {
 		for (TreeItem item : tree.getItems()) {
 			item.dispose();
 		}
-		projeto.loadTaskList();
+		try {
+			projeto.loadTaskList();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		for (Task task : projeto.getTasks()) {
 			task.loadSubTaskList();
@@ -422,7 +428,12 @@ public class AdvisorMenuView {
 			cal_start.set(Calendar.MILLISECOND, 0);
 			Date startDateObj = new Date(cal_start.getTimeInMillis());
 
-			projeto.createTask(startDateObj, endDateObj, nameText.getText(), descriptionText.getText());
+			try {
+				projeto.createTask(startDateObj, endDateObj, nameText.getText(), descriptionText.getText());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			populateTree(tree, projeto);
 			newTaskShell.close();
 		});

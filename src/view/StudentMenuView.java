@@ -2,6 +2,7 @@ package view;
 
 
 import java.sql.Date;
+import java.sql.SQLException;
 
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -58,7 +59,12 @@ public class StudentMenuView {
 	}
 
 	public void open(Student student) {
-		student.loadProject();
+		try {
+			student.loadProject();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		shell = new Shell(display);
 		createResourceManager();
 		shell.setText("Menu Principal");
@@ -97,7 +103,12 @@ public class StudentMenuView {
 		studentEmailLabel.setText("Email: " + student.getEmail());
 		studentEmailLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
 		
-		student.loadNotification();
+		try {
+			student.loadNotification();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for(Notification notification: student.getNotifications()) {
 			notificationsList.add(notification.getMessage());
 		}
@@ -182,7 +193,12 @@ public class StudentMenuView {
 		for (TreeItem item : tree.getItems()) {
 			item.dispose();
 		}
-		projeto.loadTaskList();
+		try {
+			projeto.loadTaskList();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		for (Task task : projeto.getTasks()) {
 			task.loadSubTaskList();
@@ -234,7 +250,7 @@ public class StudentMenuView {
 		Label taskDescriptionLabel = new Label(newTaskShell, SWT.CENTER);
 		taskDescriptionLabel.setText("Descrição da tarefa: " + task.getDescription());
 		taskDescriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
-		if(task.getStatus() == "INCOMPLETA") {
+		if(task.getStatus().equalsIgnoreCase("INCOMPLETA")) {
 				Label taskDurationLabel = new Label(newTaskShell, SWT.CENTER);
 				taskDurationLabel.setText("A tarefa está aberta a: " + task.getDuration().toString() + " dias");
 				taskDurationLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
