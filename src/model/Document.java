@@ -39,7 +39,6 @@ public class Document {
 	}
 
 	public void attachDocument() throws Exception{
-		
 		handleFileUpload();
 		notifyObservers();
 	}

@@ -92,38 +92,7 @@ public class TaskBanco {
 
 	}
 
-	public static void loadTaskFeedback(Task task) throws SQLException {
-		DBConnection connection = new DBConnection();
-		String sql = "SELECT * from feedback WHERE task_id = ?";
-		PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-		statement.setInt(1, task.getID());
-
-		ResultSet rs =  statement.executeQuery();
-		if(rs.next()){
-			Feedback feedback = new Feedback(rs.getDate("feedback_date").toLocalDate(),rs.getString("body"));
-			task.setFeedback(feedback);
-		}
-		statement.close();
-	}
-
-
-	public static void loadSubTaskFeedback(Task task) throws SQLException{
-		DBConnection connection = new DBConnection();
-		String sql = "SELECT * from sub_feedback WHERE subtask_id = ?";
-		PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-		statement.setInt(1, task.getID());
-
-		ResultSet rs = statement.executeQuery();
-		if(rs.next()){
-			Feedback feedback = new Feedback(rs.getDate("feedback_date").toLocalDate(),rs.getString("body"));
-			task.setFeedback(feedback);
-		}
-
-		statement.close();
-
-	}
+	
 
 	public static void loadSubTaskList(Task task) throws SQLException, Exception {
 

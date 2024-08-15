@@ -5,10 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import banco.DBConnection;
+import banco.NotificationBanco;
 import banco.StudentBanco;
 import model.notification.AdvisorNotification;
 import model.notification.Notification;
-import model.notification.StudentNotification;
+
 
 public class Student extends User {
 	private InterfaceProject project;
@@ -42,13 +43,11 @@ public class Student extends User {
 	}
 	
 	public void loadNotification() throws Exception {
-		StudentBanco.loadNotifications(this);
+		NotificationBanco.loadStudentNotifications(this);
 	}
 	
-	public void setNotification(String body,String status) {
-	
-		Notification notification = new StudentNotification(body,status,this);
-		this.sendNotification(notification);
+	public void setNotification() throws SQLException {
+		NotificationBanco.loadStudentNotifications(this);
 	}
 
 	public Student getStudentById(Integer id) throws Exception {

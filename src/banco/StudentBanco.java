@@ -43,22 +43,6 @@ public class StudentBanco {
 	}
 	
 	
-	public static void loadNotifications(Student student) throws SQLException{
-	
-			DBConnection connection = new DBConnection();
-			String sql = "Select * from GuidingNotifications where guiding_id = ?";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-			statement.setInt(1, student.getUserID());
-
-			ResultSet rs = statement.executeQuery();
-			while(rs.next()) {
-				student.setNotification(rs.getString("body"),rs.getString("notification_status"));
-			}
-			statement.close();
-	
-	}
-	
 	public static void loadProject(Student student) throws SQLException {
 		
 			DBConnection connection = new DBConnection();

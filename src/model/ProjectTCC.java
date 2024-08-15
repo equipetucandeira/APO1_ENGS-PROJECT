@@ -121,10 +121,6 @@ public class ProjectTCC implements InterfaceProject {
 	}
 
 	
-	@Override
-	public void sendNotification(User user, Notification notification) {
-		user.sendNotification(notification);
-	}
 
 	@Override
 	public void loadTaskList() throws SQLException {

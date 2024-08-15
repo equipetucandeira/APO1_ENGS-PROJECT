@@ -10,6 +10,7 @@ import java.time.Period;
 import java.util.List;
 
 import banco.DBConnection;
+import banco.FeedbackBanco;
 import banco.TaskBanco;
 
 public class Task implements DocumentObserver {
@@ -56,7 +57,6 @@ public class Task implements DocumentObserver {
 	private void addDocumentIDFatherTask() throws SQLException {
 		TaskBanco.updateDocumentToAttached(this);
 	}
-
 
 	public void subTaskCompleteUpdate() throws SQLException {
 		TaskBanco.subTaskCompleteUpdate(this);
@@ -114,12 +114,13 @@ public class Task implements DocumentObserver {
 		return this.grade;
 	}
 
-	public void CreateFeedback(String text) {
+	public void CreateFeedback(String text) throws SQLException {
 		if(text != null) {
 			if (this.feedback == null) {
-				if (this.getStatus() == "COMPLETA") {
-					this.feedback = new Feedback(LocalDate.now(), text);
-					feedback.addToDatabase(this);
+				if (this.getStatus().equalsIgnoreCase("COMPLETA")) {
+					Feedback feedback = new Feedback(LocalDate.now(), text);
+					feedback.CreateFeedback(this);
+					this.feedback = feedback;
 				}
 			}
 		}
@@ -141,9 +142,9 @@ public class Task implements DocumentObserver {
 	public void loadFeedback() throws SQLException {
 
 		if(!isSubTask()) {	
-			TaskBanco.loadTaskFeedback(this);
+			FeedbackBanco.loadTaskFeedback(this);
 		}
-		TaskBanco.loadSubTaskFeedback(this);
+		FeedbackBanco.loadSubTaskFeedback(this);
 
 	}
 

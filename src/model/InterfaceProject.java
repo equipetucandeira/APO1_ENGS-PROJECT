@@ -40,7 +40,6 @@ public interface InterfaceProject {
 	void setTask(Integer id, LocalDate startDate, LocalDate endDate, String title, String description, String status,
 			Integer document_id, Double grade) throws SQLException;
 
-	void sendNotification(User user, Notification notification);
 
 	void loadTaskList() throws SQLException;
 

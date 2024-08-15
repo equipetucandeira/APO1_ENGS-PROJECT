@@ -36,22 +36,7 @@ public class AdvisorBanco {
 	}
 	}
 
-	public static void loadAdvisorNotification(Advisor advisor) throws Exception {
-
-		DBConnection connection = new DBConnection();
-		String sql = "Select * from AdvisorNotifications where advisor_id = ?";
-		PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-		statement.setInt(1, advisor.getUserID());
-
-		ResultSet rs = statement.executeQuery();
-		while(rs.next()) {
-			advisor.setNotification(rs.getString("body"),rs.getString("notification_status"));
-
-			statement.close();
-
-		}
-	}
+	
 
 	public static void loadProjects(Advisor advisor) throws Exception{
 

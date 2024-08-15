@@ -5,23 +5,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import banco.DBConnection;
+import banco.NotificationBanco;
 import model.Advisor;
 
 import model.Student;
+import model.User;
 import model.UserInterfaces;
 
-public abstract class Notification {
+public class Notification {
 	protected UserInterfaces user;
 	protected String message;
 	protected String status;
 
-	public Notification(String message, String status, UserInterfaces user) {
+	public Notification(String message, UserInterfaces user) {
 		this.message = message;
 		this.status = "NAO_LIDA";
 		this.user = user;
 	}
 
 	
+	public Notification(String message, String status) {
+		this.message = message;
+		this.status = status;
+	}
+
+
 	public String getMessage() {
 		return message;
 	}
@@ -30,7 +38,7 @@ public abstract class Notification {
 		this.message = message;
 	}
 	
-	protected void sendNotification() {
+	public void sendNotification() throws SQLException {
 		
 	}
 
@@ -41,5 +49,15 @@ public abstract class Notification {
 	protected void setStatus(String status) {
 		this.status = status;
 	}
+	
+	public void loadNotification() throws SQLException {
+	
+	}
+
+
+	public UserInterfaces getUser() {
+		return this.user;
+	}
+
 
 }

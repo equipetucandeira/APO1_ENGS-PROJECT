@@ -36,7 +36,9 @@ import model.Advisor;
 import model.InterfaceProject;
 import model.Student;
 import model.Task;
+import model.notification.FeedbackNotification;
 import model.notification.Notification;
+
 
 public class AdvisorMenuView {
 	private Display display;
@@ -585,7 +587,14 @@ public class AdvisorMenuView {
 
 			sendResponseButton.addListener(SWT.Selection, sendResponseEvent -> {
 				if (Double.valueOf(numberText.getText()) < 10 || Double.valueOf(numberText.getText()) > 0) {
-					task.CreateFeedback(feedbackText.getText());
+					try {
+						task.CreateFeedback(feedbackText.getText());
+						Notification notification = new FeedbackNotification(project.getStudent());
+						notification.sendNotification();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					try {
 						task.addTaskGrade(Double.valueOf(numberText.getText()));
 					} catch (NumberFormatException | SQLException e1) {

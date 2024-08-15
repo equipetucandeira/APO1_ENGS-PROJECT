@@ -34,7 +34,9 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.ibm.icu.util.Calendar;
 
 import model.*;
+import model.notification.FeedbackNotification;
 import model.notification.Notification;
+import model.notification.TaskNotification;
 
 public class StudentMenuView {
 	private Display display;
@@ -136,7 +138,6 @@ public class StudentMenuView {
 		projectDetailsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 			createTaskWindow(student.getProject(),projectDetailsComposite);
-		
 		
 		}else {
 			Label projectName = new Label(projectsComposite, SWT.TOP);
@@ -338,7 +339,8 @@ public class StudentMenuView {
 							 
 							try {
 								task.attachDocument(filePath,fileName);
-								
+								Notification notification = new TaskNotification(project);
+								notification.sendNotification();
 								 for (Control control : tree.getChildren()) {
 								        control.dispose();
 								    }

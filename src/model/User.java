@@ -26,7 +26,7 @@ public class User implements UserInterfaces {
 		this.notifications = new ArrayList<Notification>();
 	}
 
-	public void sendNotification(Notification notification) {
+	public void setNotification(Notification notification) {
 		notifications.add(notification);
 	}
 	

@@ -8,6 +8,7 @@ import java.util.List;
 
 import banco.AdvisorBanco;
 import banco.DBConnection;
+import banco.NotificationBanco;
 import banco.ProjectBanco;
 import banco.AdvisorBanco;
 import model.notification.AdvisorNotification;
@@ -32,13 +33,9 @@ public class Advisor extends User  {
 	}
 
 	public void loadNotification() throws Exception {
-		AdvisorBanco.loadAdvisorNotification(this);
+		NotificationBanco.loadAdvisorNotification(this);
 	}
 
-	public void setNotification(String body,String status) {
-		Notification notification = new AdvisorNotification(body,status,this);
-		this.sendNotification(notification);
-	}
 
 	public void setAssociatedProjects(Integer id, String title, int student_id, String status, float grade) {
 		try {

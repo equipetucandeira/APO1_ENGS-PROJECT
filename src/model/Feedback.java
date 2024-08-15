@@ -7,56 +7,45 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 import banco.DBConnection;
+import banco.FeedbackBanco;
 
 public class Feedback {
+	private Integer id;
 	private LocalDate date;
 	private String body;
-	private Task task;
 
 	public Feedback(LocalDate date, String body) {
 		this.date = date;
 		this.body = body;
 	}
 
-	public void addToDatabase(Task task) {
+	public void CreateFeedback(Task task) throws SQLException {
+		String body = this.getBody();
+		Date date = Date.valueOf(this.getDate());
+		Integer id = task.getID();
 		if(!task.isSubTask()) {	
-			try {
-				DBConnection connection = new DBConnection();
-				String sql = "call addFeedback(?,?,?)";
-				CallableStatement statement = connection.getConnection().prepareCall(sql);
-
-				statement.setDate(1, Date.valueOf(this.getDate()));
-				statement.setString(2, this.getBody());
-				statement.setInt(3, task.getID());
-
-				statement.executeUpdate();
-
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();		
-			}
+			FeedbackBanco.CreateTaskFeedback(date,body,id);
+		}else {
+			FeedbackBanco.CreateSubTaskFeedback(date,body,id);
 		}
-			try {
-				DBConnection connection = new DBConnection();
-				String sql = "call addSubtaskFeedback(?,?,?)";
-				CallableStatement statement = connection.getConnection().prepareCall(sql);
-
-				statement.setDate(1, Date.valueOf(this.getDate()));
-				statement.setString(2, this.getBody());
-				statement.setInt(3, task.getID());
-
-				statement.executeUpdate();
-
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
+	}
+	
+	public void loadFeedback() throws Exception{
+		
+		
 	}
 
 	public LocalDate getDate() {
 		return date;
 	}
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 
 	public void setDate(LocalDate date) {
 		this.date = date;
@@ -69,4 +58,6 @@ public class Feedback {
 	public void setBody(String body) {
 		this.body = body;
 	}
+	
+	
 }

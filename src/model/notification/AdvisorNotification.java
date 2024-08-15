@@ -10,7 +10,7 @@ import model.Advisor;
 public class AdvisorNotification extends Notification {
 	
 	public AdvisorNotification(String message, String status, Advisor advisor) {
-		super(message, status,advisor);
+		super(message,advisor);
 	}
 	
 	@Override
