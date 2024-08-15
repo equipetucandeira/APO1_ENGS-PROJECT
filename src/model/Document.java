@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import banco.DBConnection;
+import banco.DocumentBanco;
 
 public class Document {
 	private int id;
@@ -30,8 +31,7 @@ public class Document {
 		
 	}
 
-	public Document(Integer document_id) {
-		this.id = document_id;
+	public Document() {
 	}
 
 	public void attachObserver(DocumentObserver observer) {
@@ -57,11 +57,10 @@ public class Document {
 	    String destinationPath =  documentPath + new File(this.file).getName();
 	    
 	    try {
-	        // Copiar o arquivo para o diretório de destino
-	        Files.copy(Paths.get(file), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
+	       	Files.copy(Paths.get(file), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
+	       
+	        documentid = DocumentBanco.InsertPathAndSendNotification(destinationPath,this.title);
 	        
-	        // 
-	        documentid = saveFilePathToDatabase(destinationPath,this.title);
 	        this.setID(documentid);
 	    } catch (IOException | SQLException e) {
 	        throw e;
@@ -74,21 +73,6 @@ public class Document {
 		
 	}
 
-	public int saveFilePathToDatabase(String filePath, String fileName) throws SQLException {
-		int documentid = -1;
-		
-			DBConnection connection = new DBConnection();
-			String sql = "call taskDocumentInsert(?,?,?) ";
-			CallableStatement statement = connection.getConnection().prepareCall(sql);
-			statement.setString(1, filePath);
-			statement.setString(2, fileName);
-			statement.registerOutParameter(3, Types.INTEGER);
-			statement.executeUpdate();
-			documentid = statement.getInt(3);
-			statement.close();
-
-		return documentid;
-	}
 
 	public String getTitle() {
 		return title;
@@ -120,24 +104,8 @@ public class Document {
 		return this.id;
 	}
 	
-	public void getDocumentById() {
-		try {
-			DBConnection connection = new DBConnection();
-			String sql = "SELECT * from documents where document_id = ?";
-			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-		
-			statement.setInt(1,this.getID());
-			
-			ResultSet rs = statement.executeQuery();
-			if(rs.next()) {
-			this.setFile(rs.getString("document_path"));
-			this.setTitle(rs.getString("document_title"));
-			}
-			rs.close();
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public Document getDocumentById(Integer id) throws SQLException {
+		return DocumentBanco.getDocument(id);
 	}
 	
 	public void copyFile(String destinationPath) throws IOException {

@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import banco.DBConnection;
-import model.StatusTypes;
 import model.Student;
 
 public class StudentNotification extends Notification {

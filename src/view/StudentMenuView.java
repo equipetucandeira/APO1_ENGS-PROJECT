@@ -204,7 +204,6 @@ public class StudentMenuView {
 			try {
 				task.loadSubTaskList();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			TreeItem taskItem = new TreeItem(tree, SWT.NONE);

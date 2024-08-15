@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import banco.DBConnection;
-import model.StatusTypes;
 import model.Advisor;
 
 public class AdvisorNotification extends Notification {

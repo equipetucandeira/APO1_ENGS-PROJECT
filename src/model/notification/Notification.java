@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import banco.DBConnection;
 import model.Advisor;
-import model.StatusTypes;
+
 import model.Student;
 import model.UserInterfaces;
 

@@ -34,7 +34,6 @@ import com.ibm.icu.util.Calendar;
 import model.Advisor;
 import model.Advisor;
 import model.InterfaceProject;
-import model.StatusTypes;
 import model.Student;
 import model.Task;
 import model.notification.Notification;
@@ -587,7 +586,11 @@ public class AdvisorMenuView {
 			sendResponseButton.addListener(SWT.Selection, sendResponseEvent -> {
 				if (Double.valueOf(numberText.getText()) < 10 || Double.valueOf(numberText.getText()) > 0) {
 					task.CreateFeedback(feedbackText.getText());
-					task.addTaskGrade(Double.valueOf(numberText.getText()));
+					try {
+						task.addTaskGrade(Double.valueOf(numberText.getText()));
+					} catch (NumberFormatException | SQLException e1) {
+						e1.printStackTrace();
+					}
 					for (Control control : tree.getChildren()) {
 						control.dispose();
 					}

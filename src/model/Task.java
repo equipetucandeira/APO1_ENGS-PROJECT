@@ -205,11 +205,10 @@ public class Task implements DocumentObserver {
 		return endDate;
 	}
 
-	public void setDocument(Integer document_id) {
+	public void setDocument(Integer document_id) throws SQLException {
 		if(document_id != null) {
-			Document document = new Document(document_id);
-			document.getDocumentById();
-			this.attachedDocument = document;
+			Document document = new Document();
+			this.attachedDocument = document.getDocumentById(document_id);;
 		}
 	}
 
@@ -288,38 +287,12 @@ public class Task implements DocumentObserver {
 		TaskBanco.UpdateTaskDate(this);
 	}
 
-	public void addTaskGrade(Double grade) {
+	public void addTaskGrade(Double grade) throws SQLException {
 		this.setGrade(grade);
-		if(this.subTasks != null) {
-			try {
-				DBConnection connection = new DBConnection();
-				String sql = "UPDATE task SET task_grade = ? WHERE task_id = ?";
-				PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-				statement.setDouble(1,grade);
-				statement.setInt(2, this.getID());
-
-				statement.executeUpdate();
-
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		if(!this.isSubTask()) {
+			TaskBanco.addTaskGrade(this);
 		}else {
-			try {
-				DBConnection connection = new DBConnection();
-				String sql = "UPDATE subtask SET task_grade = ? WHERE subtask_id = ?";
-				PreparedStatement statement = connection.getConnection().prepareStatement(sql);
-
-				statement.setDouble(1,grade);
-				statement.setInt(2, this.getID());
-
-				statement.executeUpdate();
-
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			TaskBanco.addSubTaskGrade(this);
 		}
 	}
 
