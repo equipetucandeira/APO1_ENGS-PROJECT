@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import banco.DBConnection;
 import banco.NotificationBanco;
 import banco.StudentBanco;
-import model.notification.AdvisorNotification;
 import model.notification.Notification;
 
 

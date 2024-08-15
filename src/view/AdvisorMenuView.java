@@ -1,7 +1,11 @@
 package view;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.SQLException;
 
@@ -23,6 +27,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -238,7 +243,10 @@ public class AdvisorMenuView {
 				projectsShell.close();
 				updateProjectsList(advisor);
 			} catch (Exception createError) {
-				System.out.println(createError.getMessage());
+				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+                messageBox.setText("Oops!");
+                messageBox.setMessage("Parece que este estudante já está em um projeto!");
+                messageBox.open();
 			}
 
 		});
@@ -537,9 +545,31 @@ public class AdvisorMenuView {
 		// Botão para Download
 		Button downloadButton = new Button(documentShell, SWT.PUSH);
 		downloadButton.setText("Download do Documento");
+		Button VisualizeButton = new Button(documentShell, SWT.PUSH);
+		VisualizeButton.setText("Visualizar Documento");
 		GridData downloadButtonData = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
 		downloadButtonData.horizontalAlignment = SWT.FILL;
 		downloadButton.setLayoutData(downloadButtonData);
+		VisualizeButton.setLayoutData(downloadButtonData);
+		
+		VisualizeButton.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+		
+		        try {
+		        	String documentPath = Paths.get(System.getProperty("user.dir"), "documents").toString();
+		            String fullPath = Paths.get(documentPath, task.getDocument().getFile()).toString();
+		            
+		            File documentFile = new File(fullPath);
+		            URI fileURI = documentFile.toURI();
+		            Desktop.getDesktop().browse(fileURI);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
+
+		});
 		downloadButton.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event e) {

@@ -11,7 +11,6 @@ import banco.DBConnection;
 import banco.NotificationBanco;
 import banco.ProjectBanco;
 import banco.AdvisorBanco;
-import model.notification.AdvisorNotification;
 import model.notification.Notification;
 
 public class Advisor extends User  {
