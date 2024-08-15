@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -48,23 +49,16 @@ public class StudentMenuView {
 		this.display = display;
 	}
 
-	public static void main(String[] args) throws Exception {
-		Student student = new Student();
-		student.setEmail("pedro@email.com");
-		student.setPassword("pedro");
-		student.login();
-
-		Display display = new Display();
-		StudentMenuView window = new StudentMenuView(display);
-		window.open(student);
-	}
 
 	public void open(Student student) {
 			try {
 				student.loadProject();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+                messageBox.setText("Oops!");
+                messageBox.setMessage(e.getMessage());
+                messageBox.open();
+
 			}
 	
 		shell = new Shell(display);
@@ -108,7 +102,10 @@ public class StudentMenuView {
 		try {
 			student.loadNotification();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+            messageBox.setText("Oops!");
+            messageBox.setMessage(e.getMessage());
+            messageBox.open();
 			e.printStackTrace();
 		}
 		for(Notification notification: student.getNotifications()) {
@@ -197,7 +194,10 @@ public class StudentMenuView {
 		try {
 			projeto.loadTaskList();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+            messageBox.setText("Oops!");
+            messageBox.setMessage(e.getMessage());
+            messageBox.open();
 			e.printStackTrace();
 		}
 
@@ -351,8 +351,11 @@ public class StudentMenuView {
 								 populateTree(tree,project);
 								 documentShell.close();
 							} catch (Exception e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
+								MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+				                messageBox.setText("ERRO!");
+				                messageBox.setMessage(e1.getMessage());
+				                messageBox.open();
+				
 							}
 						}
 					}

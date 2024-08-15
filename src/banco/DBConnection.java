@@ -27,7 +27,7 @@ public class DBConnection {
 	public DBConnection() {
 		this.setHost	("localhost");
 		this.setPort	("");
-		this.setSchema	("bd_tcc");
+		this.setSchema	("bd_tcc2");
 		this.setUser	("root");
 		this.setPassword("");
 		this.doConnection();

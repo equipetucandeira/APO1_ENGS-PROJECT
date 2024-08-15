@@ -55,16 +55,6 @@ public class AdvisorMenuView {
 		this.display = display;
 	}
 
-	public static void main(String[] args) throws Exception {
-		Advisor advisor = new Advisor();
-		advisor.setEmail("alexandra@email.com");
-		advisor.setPassword("alexandra");
-		advisor.login();
-		Display display = new Display();
-		AdvisorMenuView window = new AdvisorMenuView(display);
-		window.open(advisor);
-	}
-
 	public void open(Advisor advisor) {
 		shell = new Shell(display);
 		createResourceManager();
@@ -107,6 +97,10 @@ public class AdvisorMenuView {
 		try {
 			advisor.loadNotification();
 		} catch (Exception e) {
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+            messageBox.setText("Erro!");
+            messageBox.setMessage("Falha ao carregar informações de notificação!");
+            messageBox.open();
 			e.printStackTrace();
 		}
 
@@ -207,7 +201,10 @@ public class AdvisorMenuView {
 		try {
 			advisor.loadProjectList();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+            messageBox.setText("Erro!");
+            messageBox.setMessage(e.getMessage());
+            messageBox.open();
 		}
 		projectsList.removeAll();
 		for (InterfaceProject projetos : advisor.getAllAssociatedProjects()) {
@@ -238,16 +235,17 @@ public class AdvisorMenuView {
 		createProject.addListener(SWT.Selection, e -> {
 			try {
 				Student student = new Student();
-				student.getStudentById(Integer.valueOf(studentIdText.getText()));
+				student = student.getStudentById(Integer.valueOf(studentIdText.getText()));
 				advisor.createProject(projectNameText.getText(), student);
 				projectsShell.close();
 				updateProjectsList(advisor);
 			} catch (Exception createError) {
 				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
                 messageBox.setText("Oops!");
-                messageBox.setMessage("Parece que este estudante já está em um projeto!");
+                messageBox.setMessage(createError.getMessage());
                 messageBox.open();
-			}
+                
+                }
 
 		});
 
@@ -305,8 +303,11 @@ public class AdvisorMenuView {
 		}
 		try {
 			projeto.loadTaskList();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
+			MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+            messageBox.setText("Erro!");
+            messageBox.setMessage(e.getMessage());
+            messageBox.open();
 			e.printStackTrace();
 		}
 
@@ -314,6 +315,10 @@ public class AdvisorMenuView {
 			try {
 				task.loadSubTaskList();
 			} catch (Exception e) {
+				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+	            messageBox.setText("Erro!");
+	            messageBox.setMessage(e.getMessage());
+	            messageBox.open();
 				e.printStackTrace();
 			}
 			TreeItem taskItem = new TreeItem(tree, SWT.NONE);
@@ -444,7 +449,10 @@ public class AdvisorMenuView {
 			try {
 				projeto.createTask(startDateObj, endDateObj, nameText.getText(), descriptionText.getText());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+	            messageBox.setText("Erro!");
+	            messageBox.setMessage(e.getMessage());
+	            messageBox.open();
 				e.printStackTrace();
 			}
 			populateTree(tree, projeto);
@@ -500,7 +508,10 @@ public class AdvisorMenuView {
 			try {
 				task.createSubTask(startDateObj, endDateObj, nameText.getText(), descriptionText.getText());
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+	            messageBox.setText("Erro!");
+	            messageBox.setMessage(e.getMessage());
+	            messageBox.open();
 				e.printStackTrace();
 			}
 
@@ -564,6 +575,10 @@ public class AdvisorMenuView {
 		            URI fileURI = documentFile.toURI();
 		            Desktop.getDesktop().browse(fileURI);
 				} catch (IOException e) {
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+		            messageBox.setText("Erro!");
+		            messageBox.setMessage(e.getMessage());
+		            messageBox.open();
 					e.printStackTrace();
 				}
 				
@@ -587,8 +602,12 @@ public class AdvisorMenuView {
 						try {
 							task.getDocument().copyFile(selectedPath);
 							
-						} catch (IOException ioException) {
-							ioException.printStackTrace();
+						} catch (Exception e1) {
+							MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+				            messageBox.setText("Erro!");
+				            messageBox.setMessage(e1.getMessage());
+				            messageBox.open();
+						
 						}
 					}
 			}
@@ -622,12 +641,18 @@ public class AdvisorMenuView {
 						Notification notification = new FeedbackNotification(project.getStudent());
 						notification.sendNotification();
 					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+			            messageBox.setText("Erro!");
+			            messageBox.setMessage(e1.getMessage());
+			            messageBox.open();
 					}
 					try {
 						task.addTaskGrade(Double.valueOf(numberText.getText()));
 					} catch (NumberFormatException | SQLException e1) {
+						MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+			            messageBox.setText("Erro!");
+			            messageBox.setMessage("Falha ao adicionar nota!");
+			            messageBox.open();
 						e1.printStackTrace();
 					}
 					for (Control control : tree.getChildren()) {

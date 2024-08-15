@@ -1,3 +1,8 @@
+drop database if exists bd_tcc2;
+
+create database bd_tcc2;
+use bd_tcc2;
+
 -- MySQL dump 10.13  Distrib 8.3.0, for macos14.2 (arm64)
 --
 -- Host: localhost    Database: bd_tcc

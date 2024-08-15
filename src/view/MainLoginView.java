@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -112,7 +113,11 @@ public class MainLoginView {
 				
 
 			} catch (Exception e1) {
-				System.out.println(e1.getMessage());
+				MessageBox messageBox = new MessageBox(loginShell, SWT.ICON_ERROR | SWT.OK);
+                messageBox.setText("Falha realizar o login!");
+                messageBox.setMessage(e1.getMessage());
+                messageBox.open();
+				
 			}
 
 		});
