@@ -28,17 +28,14 @@ public class Student extends User {
 	
 	public InterfaceProject getProject() {
 		return this.project;
-	}
+	}		
 	
-	public void setProject(Integer projectID, String title, Integer advisorID, String status, float grade) {
-		try {
+	public void setProject(Integer projectID, String title, Integer advisorID, String status, float grade)throws Exception {
+		
 		Advisor advisor = new Advisor();
 		advisor = advisor.loadAdvisor(advisorID);
 		InterfaceProject newProject = new ProjectTCC(projectID,title,advisor,this,status,grade);
 		this.project = newProject;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void loadNotification() throws Exception {
@@ -51,7 +48,6 @@ public class Student extends User {
 
 	public Student getStudentById(Integer id) throws Exception {
 		return StudentBanco.getStudent(id);
-		
 	}
 	
 	public void loadProject() throws SQLException {
