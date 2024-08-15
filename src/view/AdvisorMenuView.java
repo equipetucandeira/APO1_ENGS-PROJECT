@@ -340,13 +340,13 @@ public class AdvisorMenuView {
 		taskDescriptionLabel.setText("Descrição da tarefa: " + task.getDescription());
 		taskDescriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
 
-		// É uma subtarefa?
 		if (!task.isSubTask()) {
-			if (task.getStatus() != "COMPLETA") {
+			if (task.getStatus().equalsIgnoreCase("INCOMPLETA")) {
+				
 				Label taskDurationLabel = new Label(newTaskShell, SWT.CENTER);
 				taskDurationLabel.setText("A tarefa está aberta a: " + task.getDuration().toString() + " dias");
 				taskDurationLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
-
+				
 				Button subTaskButton = new Button(newTaskShell, SWT.PUSH);
 				subTaskButton.setText("Adicionar Sub Tarefa");
 				GridData subTaskGridData = new GridData(SWT.LEFT, SWT.LEFT, false, false);
@@ -358,7 +358,6 @@ public class AdvisorMenuView {
 					newTaskShell.close();
 				});
 			}
-
 			if (!task.haveSubtasks()) {
 				if (task.getStatus().equalsIgnoreCase("COMPLETA")) {
 					Button DocumentVisualizeButton = new Button(newTaskShell, SWT.PUSH);
@@ -373,6 +372,7 @@ public class AdvisorMenuView {
 					});
 				}
 			}
+			//AQUI EM DIANTE TRATA SUB-TAREFA
 		} else {
 			if (task.getStatus().equalsIgnoreCase("COMPLETA")) {
 				Button DocumentVisualizeButton = new Button(newTaskShell, SWT.PUSH);

@@ -263,14 +263,17 @@ public class StudentMenuView {
 			taskCompleteLabel.setText("Entrega realizada, tarefa completa");
 			taskCompleteLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
 			Label taskGradeLabel = new Label(newTaskShell, SWT.CENTER);
+			if(task.getFeedback() != null) {
 			taskGradeLabel.setText("Nota: " + task.getGrade());
 			taskGradeLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
+			
 			Label taskFeedbackLabel = new Label(newTaskShell, SWT.CENTER);
 			taskFeedbackLabel.setText("Feedback: " + task.getFeedback().getBody());
 			taskFeedbackLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
+			}
 		}
 
-		System.out.println(task.haveSubtasks());
+		
 		if(!task.isSubTask()) {
 			if(task.haveSubtasks()) {
 			}else {

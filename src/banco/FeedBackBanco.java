@@ -14,7 +14,7 @@ public class FeedbackBanco {
 	public static void CreateTaskFeedback(Date date, String body, Integer task_id) throws SQLException {
 
 		DBConnection connection = new DBConnection();
-		String sql = "call addFeedback(?,?,?)";
+		String sql = "call addTaskFeedback(?,?,?)";
 		CallableStatement statement = connection.getConnection().prepareCall(sql);
 
 		statement.setDate(1, date);
@@ -30,7 +30,7 @@ public class FeedbackBanco {
 
 
 		DBConnection connection = new DBConnection();
-		String sql = "call addSubtaskFeedback(?,?,?)";
+		String sql = "call addSubTaskFeedback(?,?,?)";
 		CallableStatement statement = connection.getConnection().prepareCall(sql);
 
 		statement.setDate(1, date);
