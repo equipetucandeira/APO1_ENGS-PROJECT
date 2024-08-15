@@ -4,7 +4,7 @@ import java.util.List;
 
 import model.notification.Notification;
 
-public interface UserInterfaces {
+public interface InterfaceUser {
 
 	List<Notification> getNotifications();
 	public void setNotification(Notification notification);

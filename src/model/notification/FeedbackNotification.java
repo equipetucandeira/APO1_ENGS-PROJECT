@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import banco.NotificationBanco;
 import model.Student;
-import model.UserInterfaces;
+import model.InterfaceUser;
 
 public class FeedbackNotification extends Notification{
 

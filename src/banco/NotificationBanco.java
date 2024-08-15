@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import model.Advisor;
 import model.Student;
 import model.User;
-import model.UserInterfaces;
+import model.InterfaceUser;
 import model.notification.Notification;
 
 public class NotificationBanco {
@@ -16,7 +16,7 @@ public class NotificationBanco {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void loadStudentNotifications(UserInterfaces user) throws SQLException {
+	public static void loadStudentNotifications(InterfaceUser user) throws SQLException {
 		DBConnection connection = new DBConnection();
 		String sql = "SELECT * from GuidingNotifications WHERE guiding_id =(?)";
 		PreparedStatement statement = connection.getConnection().prepareStatement(sql);
@@ -31,7 +31,7 @@ public class NotificationBanco {
 		statement.close();
 	}
 	
-	public static void loadAdvisorNotification(UserInterfaces user) throws Exception {
+	public static void loadAdvisorNotification(InterfaceUser user) throws Exception {
 
 		DBConnection connection = new DBConnection();
 		String sql = "Select * from AdvisorNotifications where advisor_id = ?";

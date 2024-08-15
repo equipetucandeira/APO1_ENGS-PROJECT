@@ -5,12 +5,12 @@ import java.time.LocalTime;
 
 public class Message {
 	private int messageID;
-	private UserInterfaces Author;
+	private InterfaceUser Author;
 	private String content;
 	private LocalDate date;
 	private LocalTime time;
 
-	public Message(UserInterfaces author, String content, LocalDate date, LocalTime time) {
+	public Message(InterfaceUser author, String content, LocalDate date, LocalTime time) {
 		this.Author = author;
 		this.content = content;
 		this.date = date;
@@ -32,11 +32,11 @@ public class Message {
 		this.messageID = messageID;
 	}
 
-	public UserInterfaces getAuthor() {
+	public InterfaceUser getAuthor() {
 		return Author;
 	}
 
-	public void setAuthor(UserInterfaces author) {
+	public void setAuthor(InterfaceUser author) {
 		Author = author;
 	}
 

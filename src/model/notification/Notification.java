@@ -10,14 +10,14 @@ import model.Advisor;
 
 import model.Student;
 import model.User;
-import model.UserInterfaces;
+import model.InterfaceUser;
 
 public class Notification {
-	protected UserInterfaces user;
+	protected InterfaceUser user;
 	protected String message;
 	protected String status;
 
-	public Notification(String message, UserInterfaces user) {
+	public Notification(String message, InterfaceUser user) {
 		this.message = message;
 		this.status = "NAO_LIDA";
 		this.user = user;
@@ -55,7 +55,7 @@ public class Notification {
 	}
 
 
-	public UserInterfaces getUser() {
+	public InterfaceUser getUser() {
 		return this.user;
 	}
 

@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import model.Student;
-import model.UserInterfaces;
+import model.InterfaceUser;
 
 public class StudentBanco {
 
