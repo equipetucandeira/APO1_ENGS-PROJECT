@@ -358,7 +358,7 @@ public class AdvisorMenuView {
 			}
 
 			if (!task.haveSubtasks()) {
-				if (task.getStatus() == "COMPLETA") {
+				if (task.getStatus().equalsIgnoreCase("COMPLETA")) {
 					Button DocumentVisualizeButton = new Button(newTaskShell, SWT.PUSH);
 					DocumentVisualizeButton.setText("Visualizar Entrega");
 					GridData FeedbackGridData = new GridData(SWT.LEFT, SWT.LEFT, false, false);
@@ -372,7 +372,7 @@ public class AdvisorMenuView {
 				}
 			}
 		} else {
-			if (task.getStatus() == "COMPLETA") {
+			if (task.getStatus().equalsIgnoreCase("COMPLETA")) {
 				Button DocumentVisualizeButton = new Button(newTaskShell, SWT.PUSH);
 				DocumentVisualizeButton.setText("Visualizar Entrega");
 				GridData FeedbackGridData = new GridData(SWT.LEFT, SWT.LEFT, false, false);

@@ -36,7 +36,7 @@ public class DocumentBanco {
 			
 			ResultSet rs = statement.executeQuery();
 			if(rs.next()) {
-				Document document = new Document(rs.getString("document_title"),rs.getString("document_path"));
+				Document document = new Document(rs.getString("document_path"),rs.getString("document_title"));
 				return document;
 			}
 			rs.close();
