@@ -5,7 +5,7 @@ import java.util.List;
 
 import model.notification.Notification;
 
-public class User {
+public class User implements UserInterfaces {
 	public String name;
 	public String email;
 	public Integer userID;
@@ -31,12 +31,13 @@ public class User {
 	}
 	
 
+	@Override
 	public List<Notification> getNotifications() {
 		return notifications;
 	}
 	
 
-	public User login() throws Exception {
+	public UserInterfaces login() throws Exception {
 		return this;
 
 	}
@@ -44,6 +45,7 @@ public class User {
 	public void Logout() {
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -52,6 +54,7 @@ public class User {
 		this.name = name;
 	}
 
+	@Override
 	public String getEmail() {
 		return this.email;
 	}
@@ -60,6 +63,7 @@ public class User {
 		this.email = email;
 	}
 
+	@Override
 	public Integer getUserID() {
 		return this.userID;
 	}
@@ -71,34 +75,9 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public List<Chat> getChats() {
-		return chats;
-	}
-
-	public void removeChat(Chat chat) {
-		chat.removeParticipant(this);
-		chats.remove(chat);
-	}
-
-	public Chat setSingleChat(int id, String chatName, User destination) {
-		List<User> participants = new ArrayList<User>();
-
-		participants.add(this);
-		participants.add(destination);
-		Chat newChat = new Chat(id, chatName, participants);
-		chats.add(newChat);
-		return newChat;
-	}
-
-	public void setGroupChat(int id, String chatName, List<User> UsersID) {
-		List<User> participants = new ArrayList<User>();
-
-		participants.add(this);
-		participants.addAll(UsersID);
-
-		chats.add(new GroupChat(id, chatName, participants));
-
+	@Override
+	public String getPassword() {
+		return this.password;
 	}
 
 }

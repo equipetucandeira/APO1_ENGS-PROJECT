@@ -10,7 +10,7 @@ import model.notification.Notification;
 import model.notification.StudentNotification;
 
 public class Student extends User {
-	private ProjectTCC project;
+	private InterfaceProject project;
 	
 	public Student(String name, String email, Integer userID, String password) {
 		super(name, email, userID, password);
@@ -24,20 +24,8 @@ public class Student extends User {
 	private void setProject(Integer projectID, String title, Integer advisorID, String status, float grade) {
 		try {
 		Advisor advisor = new Advisor();
-		advisor = advisor.getAdvisorById(advisorID);
-		StatusTypes type =StatusTypes.UNDEFINED;
-		switch (status) {
-		case "INICIADO":
-			type = StatusTypes.INITIATED;
-			break;
-		case "EM_PROGRESSO":
-			type = StatusTypes.PROGRESS;
-			break;
-		case "FINALIZAD0":
-			type = StatusTypes.COMPLETED;
-			break;
-		}
-		ProjectTCC newProject = new ProjectTCC(projectID,title,advisor,this,type,grade);
+		advisor = advisor.loadAdvisor(advisorID);
+		InterfaceProject newProject = new ProjectTCC(projectID,title,advisor,this,status,grade);
 		this.project = newProject;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -46,7 +34,7 @@ public class Student extends User {
 	}
 
 	@Override
-	public User login() throws Exception {
+	public UserInterfaces login() throws Exception {
 
 		DBConnection connection = new DBConnection();
 
@@ -77,7 +65,7 @@ public class Student extends User {
 		return null;
 
 	}
-	public ProjectTCC getProject() {
+	public InterfaceProject getProject() {
 		return this.project;
 	}
 	
@@ -139,7 +127,7 @@ public class Student extends User {
 			statement.setInt(1, this.getUserID());
 
 			ResultSet rs = statement.executeQuery();
-			rs.next();
+			if(rs.next()) {
 			this.setProject(
 					rs.getInt("project_id"), 
 					rs.getString("project_name"),
@@ -147,7 +135,7 @@ public class Student extends User {
 					rs.getString("project_status"), 
 					rs.getFloat("project_grade")
 					);
-			
+			}	
 			
 			rs.close();
 			statement.close();

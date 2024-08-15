@@ -8,16 +8,16 @@ import banco.DBConnection;
 import model.Advisor;
 import model.StatusTypes;
 import model.Student;
-import model.User;
+import model.UserInterfaces;
 
 public abstract class Notification {
-	protected User user;
+	protected UserInterfaces user;
 	protected String message;
-	protected StatusTypes status;
+	protected String status;
 
-	public Notification(String message, StatusTypes status, User user) {
+	public Notification(String message, String status, UserInterfaces user) {
 		this.message = message;
-		this.status = StatusTypes.UNDEFINED;
+		this.status = "NAO_LIDA";
 		this.user = user;
 	}
 
@@ -34,11 +34,11 @@ public abstract class Notification {
 		
 	}
 
-	protected StatusTypes getStatus() {
+	protected String getStatus() {
 		return status;
 	}
 
-	protected void setStatus(StatusTypes status) {
+	protected void setStatus(String status) {
 		this.status = status;
 	}
 

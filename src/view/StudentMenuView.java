@@ -110,13 +110,13 @@ public class StudentMenuView {
 		
 		if(student.getProject() != null) {
 		Label projectName = new Label(projectsComposite, SWT.TOP);
-		projectName.setText("Nome do Projeto: "+ student.getProject().getProjectTitle());
+		projectName.setText("Nome do Projeto: "+ student.getProject().getTitle());
 
 		Label advisorName = new Label(projectsComposite, SWT.TOP);
 		advisorName.setText("Nome do Orientador: "+ student.getProject().getAdvisor().getName());
 
 		Label projectStatus = new Label(projectsComposite, SWT.TOP);
-		projectStatus.setText("Status do projeto: "+ student.getProject().getProjectStatus());
+		projectStatus.setText("Status do projeto: "+ student.getProject().getStatus());
 
 		Label projectGrade = new Label(projectsComposite, SWT.TOP);
 		projectGrade.setText("Nota atual: ");
@@ -160,7 +160,7 @@ public class StudentMenuView {
 	private void createResourceManager() {
 		localResourceManager = new LocalResourceManager(JFaceResources.getResources(), shell);
 	}
-	public void createTaskWindow(ProjectTCC projeto, Composite taskComposite) {
+	public void createTaskWindow(InterfaceProject projeto, Composite taskComposite) {
 
 		Tree tree = new Tree(taskComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		tree.setHeaderVisible(true);
@@ -178,13 +178,13 @@ public class StudentMenuView {
 
 	}
 
-	private void populateTree(Tree tree, ProjectTCC projeto) {
+	private void populateTree(Tree tree, InterfaceProject projeto) {
 		for (TreeItem item : tree.getItems()) {
 			item.dispose();
 		}
 		projeto.loadTaskList();
 
-		for (Task task : projeto.getTaskList()) {
+		for (Task task : projeto.getTasks()) {
 			task.loadSubTaskList();
 			TreeItem taskItem = new TreeItem(tree, SWT.NONE);
 			taskItem.setText(new String[] { task.getTitle(), task.getDuration().toString(),
@@ -203,7 +203,7 @@ public class StudentMenuView {
 		}
 	}
 
-	public void TreeButtons(ProjectTCC project,Task task,Tree tree,TreeItem taskItem) {
+	public void TreeButtons(InterfaceProject project,Task task,Tree tree,TreeItem taskItem) {
 		Composite composite = new Composite(tree, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
@@ -221,7 +221,7 @@ public class StudentMenuView {
 		editor.setEditor(composite, taskItem, 5); // Índice 5 para a coluna "Ações"
 	}
 
-	public void TaskVisualize(ProjectTCC project,Task task, Display display, Tree tree) {
+	public void TaskVisualize(InterfaceProject project,Task task, Display display, Tree tree) {
 		Shell newTaskShell = new Shell(display);
 		newTaskShell.setText("Informações da Tareda");
 		newTaskShell.setSize(300, 200);
@@ -234,7 +234,7 @@ public class StudentMenuView {
 		Label taskDescriptionLabel = new Label(newTaskShell, SWT.CENTER);
 		taskDescriptionLabel.setText("Descrição da tarefa: " + task.getDescription());
 		taskDescriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
-		if(task.getStatus() == StatusTypes.INCOMPLETE) {
+		if(task.getStatus() == "INCOMPLETA") {
 				Label taskDurationLabel = new Label(newTaskShell, SWT.CENTER);
 				taskDurationLabel.setText("A tarefa está aberta a: " + task.getDuration().toString() + " dias");
 				taskDurationLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
@@ -265,8 +265,8 @@ public class StudentMenuView {
 	}
 
 
-	public void addDocumentShell(Shell documentShell,Task task,Tree tree, ProjectTCC project) {
-		if(task.getStatus() == StatusTypes.INCOMPLETE) {
+	public void addDocumentShell(Shell documentShell,Task task,Tree tree, InterfaceProject project) {
+		if(task.getStatus() == "INCOMPLETA") {
 		Button FeedbackButton = new Button(documentShell, SWT.PUSH);
 		FeedbackButton.setText("Adicionar Entrega");
 		GridData FeedbackGridData = new GridData(SWT.LEFT, SWT.LEFT, false, false);
@@ -300,9 +300,10 @@ public class StudentMenuView {
 						FileDialog fileDialog = new FileDialog(uploadShell, SWT.OPEN);
 						fileDialog.setFilterExtensions(new String[]{"*.pdf", "*.docx", "*.txt"});
 						String selectedFile = fileDialog.open();
-						if (selectedFile != null) {
-							filePathText.setText(selectedFile);
-						}
+						
+							if (selectedFile != null) {
+								filePathText.setText(selectedFile);
+							}	
 					}
 				});
 

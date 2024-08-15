@@ -17,7 +17,7 @@ public class Task implements DocumentObserver {
 	private LocalDate endDate;
 	private String title;
 	private String description;
-	private StatusTypes status;
+	private String status;
 	private List<Task> subTasks;
 	private Integer duration;
 	private Double grade;
@@ -29,7 +29,7 @@ public class Task implements DocumentObserver {
 	}
 
 	public Task(Integer id, LocalDate startDate, LocalDate endDate, String title, String description,
-		StatusTypes status, Double grade) {
+			String status, Double grade) {
 		this.setID(id);
 		this.setStartDate(startDate);
 		this.setEndDate(endDate);
@@ -44,7 +44,7 @@ public class Task implements DocumentObserver {
 	@Override
 	public void onDocumentAttached(Document document) {
 		if (document != null) {
-			this.status = StatusTypes.COMPLETED;
+			this.status = "COMPLETA";
 			this.attachedDocument = document;
 		}
 	}
@@ -103,30 +103,38 @@ public class Task implements DocumentObserver {
 	}
 
 	public void attachDocument(String filePath,String fileName) throws Exception {
-		if (this.getStatus() != StatusTypes.COMPLETED) {
+		if (this.getStatus() != "COMPLETA") {
 			if (this.haveSubtasks()) {
 				throw new Exception("Erro, você não pode adicionar um documento dentro de uma tarefa pai");
 			} else {
-				Document document = new Document(filePath,fileName);
-				document.attachObserver(this);
-				document.attachDocument();
-				if(this.subTasks == null) {
-					subTaskCompleteUpdate();
-				}else {
-					taskCompleteUpdate();
-					addDocumentIDFatherTask();
-				}	
+				
+				try {
+					Document document = new Document(filePath,fileName);
+					document.attachObserver(this);
+					document.attachDocument();
+				}
+				catch(Exception e1) {
+					System.out.println("Erro ao inserir");
+					return;
+				} 
+					if(this.subTasks == null) {
+						subTaskCompleteUpdate();
+					}else {
+						taskCompleteUpdate();
+						addDocumentIDFatherTask();
+					}
+			
 			}
 		}
 	}
-	
+
 	public void verifySubTaskStatus() {
 		if (this.haveSubtasks()) {
 			for (Task task : subTasks) {
-				if (task.getStatus() == StatusTypes.INCOMPLETE) {
-					this.status = StatusTypes.INCOMPLETE;
+				if (task.getStatus() == "INCOMPLETA") {
+					this.status =  "INCOMPLETA";
 				} else {
-					this.status = StatusTypes.COMPLETED;
+					this.status =  "COMPLETA";
 					taskCompleteUpdate();
 				}
 			}
@@ -140,24 +148,24 @@ public class Task implements DocumentObserver {
 	private void setGrade(Double grade) {
 		this.grade = grade;
 	}
-	
+
 	public Double getGrade() {
 		return this.grade;
 	}
 
 	public void setFeedback(String text) {
 		if(text != null) {
-		if (this.feedback == null) {
-			if (this.getStatus() == StatusTypes.COMPLETED) {
-				this.feedback = new Feedback(LocalDate.now(), text);
-				feedback.addToDatabase(this);
+			if (this.feedback == null) {
+				if (this.getStatus() == "COMPLETA") {
+					this.feedback = new Feedback(LocalDate.now(), text);
+					feedback.addToDatabase(this);
+				}
 			}
 		}
-		}
 	}
-	
+
 	public void loadFeedback() {
-		
+
 		if(this.getSubTasks() != null) {	
 			try {
 				DBConnection connection = new DBConnection();
@@ -175,24 +183,24 @@ public class Task implements DocumentObserver {
 				e.printStackTrace();		
 			}
 		}
-			try {
-				DBConnection connection = new DBConnection();
-				String sql = "SELECT * from sub_feedback WHERE subtask_id = ?";
-				PreparedStatement statement = connection.getConnection().prepareStatement(sql);
+		try {
+			DBConnection connection = new DBConnection();
+			String sql = "SELECT * from sub_feedback WHERE subtask_id = ?";
+			PreparedStatement statement = connection.getConnection().prepareStatement(sql);
 
-				statement.setInt(1, this.getID());
+			statement.setInt(1, this.getID());
 
-				ResultSet rs = statement.executeQuery();
-				if(rs.next()){
-					this.feedback = new Feedback(rs.getDate("feedback_date").toLocalDate(),rs.getString("body"));
-				}
-
-				statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			ResultSet rs = statement.executeQuery();
+			if(rs.next()){
+				this.feedback = new Feedback(rs.getDate("feedback_date").toLocalDate(),rs.getString("body"));
 			}
+
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	public Feedback getFeedback() {
 		return this.feedback;
 	}
@@ -218,15 +226,6 @@ public class Task implements DocumentObserver {
 
 	public Task setSubTask(Integer id, LocalDate startDate, LocalDate endDate, String title, String description,
 			String status, Integer document_id, Double grade) throws Exception {
-		StatusTypes type = StatusTypes.UNDEFINED;
-		switch (status) {
-		case "INCOMPLETA":
-			type = StatusTypes.INCOMPLETE;
-			break;
-		case "COMPLETA":
-			type = StatusTypes.COMPLETED;
-			break;
-		}
 
 		Task task = new Task();
 		task.setID(id);
@@ -234,7 +233,7 @@ public class Task implements DocumentObserver {
 		task.setDescription(description);
 		task.setStartDate(startDate);
 		task.setEndDate(endDate);
-		task.setStatus(type);
+		task.setStatus(status);
 		task.setDocument(document_id);
 		task.setDuration();
 		task.setGrade(grade);
@@ -307,11 +306,11 @@ public class Task implements DocumentObserver {
 		this.description = description;
 	}
 
-	public StatusTypes getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(StatusTypes status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 

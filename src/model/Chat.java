@@ -50,11 +50,11 @@ public class Chat {
 		return participants;
 	}
 
-	public User getParticipant(User user) {
+	public UserInterfaces getParticipant(UserInterfaces user) {
 		return participants.get(participants.indexOf(user));
 	}
 
-	public void removeParticipant(User user) {
+	public void removeParticipant(UserInterfaces user) {
 		participants.remove(user);
 	}
 

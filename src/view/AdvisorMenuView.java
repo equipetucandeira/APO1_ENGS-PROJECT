@@ -31,7 +31,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.ibm.icu.util.Calendar;
 
 import model.Advisor;
-import model.ProjectTCC;
+import model.Advisor;
+import model.InterfaceProject;
 import model.StatusTypes;
 import model.Student;
 import model.Task;
@@ -96,7 +97,11 @@ public class AdvisorMenuView {
 		advisorEmailLabel.setText("Email: " + advisor.getEmail());
 		advisorEmailLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
 
-		advisor.loadNotification();
+		try {
+			advisor.loadNotification();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		for (Notification notification : advisor.getNotifications()) {
 			notificationsList.add(notification.getMessage());
@@ -130,7 +135,7 @@ public class AdvisorMenuView {
 
 		projectsList.addListener(SWT.Selection, e -> {
 			String selectedProject = projectsList.getSelection()[0];
-			updateProjetoView(projetoView, advisor.getProjectTCCByName(selectedProject));
+			updateProjetoView(projetoView, advisor.getProjectTCC(selectedProject));
 		});
 
 		projectsTab.setControl(projectsComposite);
@@ -163,21 +168,21 @@ public class AdvisorMenuView {
 		localResourceManager = new LocalResourceManager(JFaceResources.getResources(), shell);
 	}
 
-	private void updateProjetoView(Composite projetoView, ProjectTCC project) {
+	private void updateProjetoView(Composite projetoView, InterfaceProject project) {
 		for (Control control : projetoView.getChildren()) {
 			control.dispose();
 		}
 
 		Label projectLabel = new Label(projetoView, SWT.NONE);
-		projectLabel.setText("Detalhes do Projeto: " + project.getProjectTitle());
+		projectLabel.setText("Detalhes do Projeto: " + project.getTitle());
 		projectLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, false, false));
 
 		Label projectStatusLabel = new Label(projetoView, SWT.WRAP);
-		projectStatusLabel.setText("Status: " + project.getProjectStatus());
+		projectStatusLabel.setText("Status: " + project.getStatus());
 		projectStatusLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
 
 		Label projectGradeLabel = new Label(projetoView, SWT.WRAP);
-		projectGradeLabel.setText("Nota Computada: " + String.valueOf(project.getProjectGrade()));
+		projectGradeLabel.setText("Nota Computada: " + String.valueOf(project.getGrade()));
 		projectGradeLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
 
 		Label projectStudentLabel = new Label(projetoView, SWT.WRAP);
@@ -192,10 +197,14 @@ public class AdvisorMenuView {
 	}
 
 	private void updateProjectsList(Advisor advisor) {
-		advisor.loadProjectList();
+		try {
+			advisor.loadProjectList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		projectsList.removeAll();
-		for (ProjectTCC projetos : advisor.getAllAssociatedProjects()) {
-			projectsList.add(projetos.getProjectTitle());
+		for (InterfaceProject projetos : advisor.getAllAssociatedProjects()) {
+			projectsList.add(projetos.getTitle());
 		}
 	}
 
@@ -241,7 +250,7 @@ public class AdvisorMenuView {
 		}
 	}
 
-	public void createTaskWindow(ProjectTCC projeto, Display display) {
+	public void createTaskWindow(InterfaceProject projeto, Display display) {
 		Shell taskShell = new Shell(display);
 		taskShell.setText("Lista de Tarefas");
 		taskShell.setSize(600, 400);
@@ -280,13 +289,13 @@ public class AdvisorMenuView {
 		}
 	}
 
-	private void populateTree(Tree tree, ProjectTCC projeto) {
+	private void populateTree(Tree tree, InterfaceProject projeto) {
 		for (TreeItem item : tree.getItems()) {
 			item.dispose();
 		}
 		projeto.loadTaskList();
 
-		for (Task task : projeto.getTaskList()) {
+		for (Task task : projeto.getTasks()) {
 			task.loadSubTaskList();
 			TreeItem taskItem = new TreeItem(tree, SWT.NONE);
 			taskItem.setText(new String[] { task.getTitle(), task.getDuration().toString(),
@@ -306,7 +315,7 @@ public class AdvisorMenuView {
 		}
 	}
 
-	private void TaskEdit(ProjectTCC project, Task task, Display display, Tree tree) {
+	private void TaskEdit(InterfaceProject project, Task task, Display display, Tree tree) {
 		Shell newTaskShell = new Shell(display);
 		newTaskShell.setText("Editar Tarefa");
 		newTaskShell.setSize(300, 200);
@@ -322,7 +331,7 @@ public class AdvisorMenuView {
 
 		// É uma subtarefa?
 		if (task.getSubTasks() != null) {
-			if (task.getStatus() != StatusTypes.COMPLETED) {
+			if (task.getStatus() != "COMPLETA") {
 				Label taskDurationLabel = new Label(newTaskShell, SWT.CENTER);
 				taskDurationLabel.setText("A tarefa está aberta a: " + task.getDuration().toString() + " dias");
 				taskDurationLabel.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, false));
@@ -340,7 +349,7 @@ public class AdvisorMenuView {
 			}
 
 			if (!task.haveSubtasks()) {
-				if (task.getStatus() == StatusTypes.COMPLETED) {
+				if (task.getStatus() == "COMPLETA") {
 					Button DocumentVisualizeButton = new Button(newTaskShell, SWT.PUSH);
 					DocumentVisualizeButton.setText("Visualizar Entrega");
 					GridData FeedbackGridData = new GridData(SWT.LEFT, SWT.LEFT, false, false);
@@ -354,7 +363,7 @@ public class AdvisorMenuView {
 				}
 			}
 		} else {
-			if (task.getStatus() == StatusTypes.COMPLETED) {
+			if (task.getStatus() == "COMPLETA") {
 				Button DocumentVisualizeButton = new Button(newTaskShell, SWT.PUSH);
 				DocumentVisualizeButton.setText("Visualizar Entrega");
 				GridData FeedbackGridData = new GridData(SWT.LEFT, SWT.LEFT, false, false);
@@ -371,7 +380,7 @@ public class AdvisorMenuView {
 		newTaskShell.open();
 	}
 
-	private void TaskCreate(ProjectTCC projeto, Display display, Tree tree) {
+	private void TaskCreate(InterfaceProject projeto, Display display, Tree tree) {
 		Shell newTaskShell = new Shell(display);
 		newTaskShell.setText("Nova Tarefa");
 		newTaskShell.setSize(300, 200);
@@ -422,7 +431,7 @@ public class AdvisorMenuView {
 
 	}
 
-	private void subTaskCreate(ProjectTCC project, Task task, Display display, Tree tree) {
+	private void subTaskCreate(InterfaceProject project, Task task, Display display, Tree tree) {
 		Shell newTaskShell = new Shell(display);
 		newTaskShell.setText("Nova Tarefa");
 		newTaskShell.setSize(300, 200);
@@ -473,7 +482,7 @@ public class AdvisorMenuView {
 		newTaskShell.open();
 	}
 
-	public void TreeButtons(ProjectTCC project, Task task, Tree tree, TreeItem taskItem) {
+	public void TreeButtons(InterfaceProject project, Task task, Tree tree, TreeItem taskItem) {
 		// Cria um Composite para conter os botões
 		Composite composite = new Composite(tree, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
@@ -493,7 +502,7 @@ public class AdvisorMenuView {
 		editor.setEditor(composite, taskItem, 5); // Índice 5 para a coluna "Ações"
 	}
 
-	public void feedbackShell(Shell feedbackShell, Task task, ProjectTCC project, Tree tree) {
+	public void feedbackShell(Shell feedbackShell, Task task, InterfaceProject project, Tree tree) {
 
 		Shell documentShell = new Shell(feedbackShell.getDisplay());
 		documentShell.setText("Detalhes do Documento");

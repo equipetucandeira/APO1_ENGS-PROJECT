@@ -38,7 +38,8 @@ public class Document {
 		observers.add(observer);
 	}
 
-	public void attachDocument() {
+	public void attachDocument() throws Exception{
+		
 		handleFileUpload();
 		notifyObservers();
 	}
@@ -50,7 +51,7 @@ public class Document {
 	}
 
 	
-	public void handleFileUpload() {
+	public void handleFileUpload() throws Exception {
 		int documentid = -1;
 	    String documentPath = System.getProperty("user.dir") + "/documents/";
 	    String destinationPath =  documentPath + new File(this.file).getName();
@@ -59,13 +60,12 @@ public class Document {
 	        // Copiar o arquivo para o diretório de destino
 	        Files.copy(Paths.get(file), Paths.get(destinationPath), StandardCopyOption.REPLACE_EXISTING);
 	        
-	        // Salvar o endereço do arquivo no banco de dados
+	        // 
 	        documentid = saveFilePathToDatabase(destinationPath,this.title);
 	        this.setID(documentid);
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        System.out.println("Erro ao enviar o arquivo.");
-	    }
+	    } catch (IOException | SQLException e) {
+	        throw e;
+	    } 
 	  
 	}
 	
@@ -74,9 +74,9 @@ public class Document {
 		
 	}
 
-	public int saveFilePathToDatabase(String filePath, String fileName) {
+	public int saveFilePathToDatabase(String filePath, String fileName) throws SQLException {
 		int documentid = -1;
-		try {
+		
 			DBConnection connection = new DBConnection();
 			String sql = "call taskDocumentInsert(?,?,?) ";
 			CallableStatement statement = connection.getConnection().prepareCall(sql);
@@ -87,9 +87,6 @@ public class Document {
 			documentid = statement.getInt(3);
 			statement.close();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		return documentid;
 	}
 

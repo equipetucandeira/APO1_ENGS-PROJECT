@@ -11,16 +11,16 @@ import java.util.List;
 import banco.DBConnection;
 import model.notification.Notification;
 
-public class ProjectTCC {
+public class ProjectTCC implements InterfaceProject {
 	private Integer id;
 	private String title;
 	private Advisor advisor;
 	private Student student;
-	private StatusTypes status;
+	private String status;
 	private float grade;
 	private List<Task> tasks;
 
-	public ProjectTCC(Integer id, String title, Advisor advisor, Student student, StatusTypes status, float grade) {
+	public ProjectTCC(Integer id, String title, Advisor advisor, Student student, String status, float grade) {
 		this.setID(id);
 		this.setTitle(title);
 		this.setAdvisor(advisor);
@@ -29,80 +29,82 @@ public class ProjectTCC {
 		this.setGrade(grade);
 		this.tasks = new ArrayList<Task>();
 	}
+	
+	public ProjectTCC(String title, Advisor advisor, Student student, String status, float grade) {
+		this.setTitle(title);
+		this.setAdvisor(advisor);
+		this.setStudent(student);
+		this.setStatus(status);
+		this.setGrade(grade);
+		this.tasks = new ArrayList<Task>();
+	}
 
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	@Override
 	public void setAdvisor(Advisor advisor) {
 		this.advisor = advisor;
 	}
 
+	@Override
 	public void setID(Integer id) {
 		this.id = id;
 	}
 
+	@Override
 	public void setStudent(Student student) {
 		this.student = student;
 	}
 
-	public void setStatus(StatusTypes status) {
+	@Override
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
+	@Override
 	public void setGrade(float grade) {
 		this.grade = grade;
 	}
 
+	@Override
 	public Advisor getAdvisor() {
 		return this.advisor;
 	}
 
+	@Override
 	public Integer getID() {
 		return this.id;
 	}
 
-	public String getProjectTitle() {
+	@Override
+	public String getTitle() {
 		return title;
 	}
 
-	public String getAdvisorName() {
-		return this.advisor.toString();
-	}
 
+	@Override
 	public Student getStudent() {
 		return this.student;
 	}
 
-	public String getProjectStatus() {
+	@Override
+	public String getStatus() {
 		return this.status.toString();
 	}
 
-	public float getProjectGrade() {
+	@Override
+	public float getGrade() {
 		return this.grade;
 	}
 
-	public List<Task> getTaskList() {
+	@Override
+	public List<Task> getTasks() {
 		return tasks;
 	}
-
-
-	public Task getTaskByName(String name) {
-		for (Task search : this.tasks) {
-			if (search.getTitle().equalsIgnoreCase(name)) {
-				return search;
-			}
-			if (search.haveSubtasks()) {
-				for (Task subSearch : search.getSubTasks()) {
-					if (subSearch.getTitle().equalsIgnoreCase(name)) {
-						return search;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
+	@Override
 	public void createTask(Date startDate, Date endDate, String title, String description) {
 		try {
 			DBConnection connection = new DBConnection();
@@ -123,20 +125,12 @@ public class ProjectTCC {
 		}
 	}
 
+	@Override
 	public void setTask(Integer id, LocalDate startDate, LocalDate endDate, String title, String description,
 		String status, Integer document_id, Double grade) {
-		StatusTypes type = StatusTypes.UNDEFINED;
-		switch (status) {
-		case "INCOMPLETA":
-			type = StatusTypes.INCOMPLETE;
-			break;
-		case "COMPLETA":
-			type = StatusTypes.COMPLETED;
-			break;
-		}
-	
+
 		
-		Task newtask = new Task(id, startDate, endDate, title, description, type,grade);
+		Task newtask = new Task(id, startDate, endDate, title, description, status,grade);
 		newtask.setDocument(document_id);
 		newtask.loadFeedback();
 		tasks.add(newtask);
@@ -144,10 +138,12 @@ public class ProjectTCC {
 
 	
 
+	@Override
 	public void sendNotification(User user, Notification notification) {
 		user.sendNotification(notification);
 	}
 
+	@Override
 	public void loadTaskList() {
 		this.tasks.clear();
 		try {

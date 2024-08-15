@@ -9,7 +9,7 @@ import model.Student;
 
 public class StudentNotification extends Notification {
 	
-	public StudentNotification(String message, StatusTypes status,Student student) {
+	public StudentNotification(String message, String status,Student student) {
 		super(message, status,student);
 		
 	}
