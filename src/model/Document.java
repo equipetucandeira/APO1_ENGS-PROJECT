@@ -36,7 +36,7 @@ public class Document {
 
 	public void attachObserver(DocumentObserver observer) {
 		observers.add(observer);
-	}
+	}	
 
 	public void attachDocument() throws Exception{
 		handleFileUpload();

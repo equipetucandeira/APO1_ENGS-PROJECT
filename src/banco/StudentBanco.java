@@ -43,7 +43,7 @@ public class StudentBanco {
 	}
 	
 	
-	public static void loadProject(Student student) throws SQLException {
+	public static void loadProject(Student student) throws Exception {
 		
 			DBConnection connection = new DBConnection();
 			String sql = "call getGuidingProjects(?)";

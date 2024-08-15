@@ -31,10 +31,10 @@ public class Student extends User {
 	}		
 	
 	public void setProject(Integer projectID, String title, Integer advisorID, String status, float grade)throws Exception {
-		
 		Advisor advisor = new Advisor();
 		advisor = advisor.loadAdvisor(advisorID);
-		InterfaceProject newProject = new ProjectTCC(projectID,title,advisor,this,status,grade);
+		InterfaceProject newProject = new ProjectTCC(title,advisor,this,status,grade);
+		newProject.setID(projectID);
 		this.project = newProject;
 	}
 	
@@ -50,7 +50,7 @@ public class Student extends User {
 		return StudentBanco.getStudent(id);
 	}
 	
-	public void loadProject() throws SQLException {
+	public void loadProject() throws Exception {
 		StudentBanco.loadProject(this);
 	}
 

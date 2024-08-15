@@ -34,13 +34,18 @@ public class Advisor extends User  {
 	public void loadNotification() throws Exception {
 		NotificationBanco.loadAdvisorNotification(this);
 	}
+	
+	public Advisor loadAdvisor(Integer id) throws Exception {
+		return AdvisorBanco.getAdvisor(id);
+	}
 
 
 	public void setAssociatedProjects(Integer id, String title, int student_id, String status, float grade) {
 		try {
 			Student student = new Student();
 			student = student.getStudentById(student_id);
-			ProjectTCC projeto = new ProjectTCC(id, title, this, student, status, grade);
+			ProjectTCC projeto = new ProjectTCC(title, this, student, status, grade);
+			projeto.setID(id);
 			associatedProjects.add(projeto);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,8 +92,6 @@ public class Advisor extends User  {
 	}
 
 
-	public Advisor loadAdvisor(Integer id) throws Exception {
-		return AdvisorBanco.getAdvisor(id);
-	}
+	
 
 }

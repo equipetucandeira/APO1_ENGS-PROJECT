@@ -63,7 +63,7 @@ public class Task implements DocumentObserver {
 	}
 
 	public void attachDocument(String filePath,String fileName) throws Exception {
-		if (this.getStatus() != "COMPLETA") {
+		if (!this.getStatus().equalsIgnoreCase("COMPLETA")) {
 			if (this.haveSubtasks()) {
 				throw new Exception("Erro, você não pode adicionar um documento dentro de uma tarefa pai");
 			} else {

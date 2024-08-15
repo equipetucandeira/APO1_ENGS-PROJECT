@@ -21,16 +21,6 @@ public class ProjectTCC implements InterfaceProject {
 	private String status;
 	private float grade;
 	private List<Task> tasks;
-
-	public ProjectTCC(Integer id, String title, Advisor advisor, Student student, String status, float grade) {
-		this.setID(id);
-		this.setTitle(title);
-		this.setAdvisor(advisor);
-		this.setStudent(student);
-		this.setStatus(status);
-		this.setGrade(grade);
-		this.tasks = new ArrayList<Task>();
-	}
 	
 	public ProjectTCC(String title, Advisor advisor, Student student, String status, float grade) {
 		this.setTitle(title);

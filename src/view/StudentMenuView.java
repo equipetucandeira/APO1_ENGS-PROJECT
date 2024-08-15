@@ -60,12 +60,13 @@ public class StudentMenuView {
 	}
 
 	public void open(Student student) {
-		try {
-			student.loadProject();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			try {
+				student.loadProject();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
 		shell = new Shell(display);
 		createResourceManager();
 		shell.setText("Menu Principal");
